@@ -14,7 +14,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.5</java.version>
 
-		<!-- version management -->
+		<!-- version management 
+
+spc
+lucene upgrage pending
+-->
 		<junit.version>4.11</junit.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<commons-codec.version>1.9</commons-codec.version>
