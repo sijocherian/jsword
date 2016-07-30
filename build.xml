@@ -3,7 +3,10 @@
 	<!-- This build uses the core build targets -->
 	<import file="core.xml" />
 
-	<!--=======================================================================-->
+	<!--=======================================================================
+
+master try 2.1
+-->
 	<!-- override -->
 	<property name="website.jsword.dir"		value="${dest.install.web.dir}"/>
 	<!-- override -->
