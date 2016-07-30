@@ -18,7 +18,7 @@
 
 spc
 lucene upgrage pending
-m2
+m1.2
 -->
 		<junit.version>4.11</junit.version>
 		<slf4j.version>1.7.2</slf4j.version>
