@@ -19,7 +19,7 @@
 spc
 lucene upgrage pending
 
-m1.3
+m1.3 after revert conflict
 
 -->
 		<junit.version>4.11</junit.version>
