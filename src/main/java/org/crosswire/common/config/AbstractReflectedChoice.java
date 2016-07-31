@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/llgpl.html
+ *       http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.config;
@@ -35,9 +34,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A helper for when we need to be a choice created dynamically.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public abstract class AbstractReflectedChoice implements Choice {
@@ -168,11 +166,16 @@ public abstract class AbstractReflectedChoice implements Choice {
 
     /**
      * Convert from a reflection return value to a String for storage
+     * 
+     * @param orig the object to be converted to a string
+     * @return the marshaled representation of the object
      */
     public abstract String convertToString(Object orig);
 
     /**
      * Convert from a stored string to an object to use with reflection
+     * @param orig the marshaled representation of the object
+     * @return the reconstituted object
      */
     public abstract Object convertToObject(String orig);
 

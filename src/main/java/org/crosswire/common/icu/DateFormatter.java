@@ -7,15 +7,14 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * The License is available on the Internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ * The License is available on the internet at:
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.icu;
@@ -36,8 +35,8 @@ import org.slf4j.LoggerFactory;
  * DateFormat that are actually used are here.
  *
  * @author DM Smith
- * @see gnu.lgpl.License for license details.<br>
- * The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.<br>
+ * The copyright to this program is held by its authors.
  */
 public final class DateFormatter {
     // Note these values are the same for Java and ICU4J
@@ -181,7 +180,7 @@ public final class DateFormatter {
     /**
      * Set whether this DataFormatter should be lenient in parsing dates.
      *
-     * @param lenient
+     * @param lenient whether to be lenient or not
      * @see java.text.DateFormat#setLenient(boolean)
      */
     public void setLenient(boolean lenient) {

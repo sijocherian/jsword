@@ -7,15 +7,14 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * The License is available on the Internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ * The License is available on the internet at:
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.icu;
@@ -49,8 +48,7 @@ import org.crosswire.jsword.internationalisation.LocaleProviderManager;
  * </p>
  * 
  * @see java.awt.font.NumericShaper
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class NumberShaper implements Serializable {
@@ -125,6 +123,12 @@ public class NumberShaper implements Serializable {
 
     /**
      * Perform shaping back to 0-9.
+     * @param src
+     *            the text to transform
+     * @param transformed
+     *            an input parameter of one boolean that can hold whether there
+     *            was a transformation
+     * @return the unshaped text
      */
     private char[] unshaped(char[] src, boolean[] transformed) {
         int nine = getNine();
@@ -138,7 +142,10 @@ public class NumberShaper implements Serializable {
 
     /**
      * @param src
+     *            the text to transform
      * @param transformed
+     *            an input parameter of one boolean that can hold whether there
+     *            was a transformation
      * @return the shaped string
      */
     private char[] shaped(char[] src, boolean[] transformed) {

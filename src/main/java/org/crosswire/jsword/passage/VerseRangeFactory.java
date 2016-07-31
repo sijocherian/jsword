@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -27,9 +26,8 @@ import org.crosswire.jsword.versification.Versification;
 /**
  * A factory that creates VerseRanges from user input.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class VerseRangeFactory {
@@ -49,6 +47,7 @@ public final class VerseRangeFactory {
      *            The versification for this VerseRange
      * @param orginal
      *            The textual representation
+     * @return the verse range for the string
      * @exception NoSuchVerseException
      *                If the text can not be understood
      */
@@ -76,6 +75,7 @@ public final class VerseRangeFactory {
      * @param basis
      *            The verse that forms the basis by which to understand the
      *            original.
+     * @return the verse range
      * @exception NoSuchVerseException
      *                If the reference is illegal
      */

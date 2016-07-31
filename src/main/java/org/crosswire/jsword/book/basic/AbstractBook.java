@@ -8,20 +8,19 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.basic;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.crosswire.common.activate.Lock;
@@ -52,9 +51,8 @@ import org.jdom2.Document;
  * does a lot of work in helping make search easier, and implementing some basic
  * write methods.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public abstract class AbstractBook implements Book {
     /**
@@ -67,6 +65,13 @@ public abstract class AbstractBook implements Book {
         this.bmd = bmd;
         this.backend = backend;
         this.listeners = new CopyOnWriteArrayList<IndexStatusListener>();
+    }
+
+    /* (non-Javadoc)
+     * @see org.crosswire.jsword.book.Book#getScope()
+     */
+    public Key getScope() {
+        return getGlobalKeyList();
     }
 
     /* (non-Javadoc)
@@ -83,9 +88,6 @@ public abstract class AbstractBook implements Book {
         this.bmd = bmd;
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.book.Book#getBookMetaData()
-     */
     public final Backend getBackend() {
         return backend;
     }
@@ -192,6 +194,13 @@ public abstract class AbstractBook implements Book {
     }
 
     /* (non-Javadoc)
+     * @see org.crosswire.jsword.book.Book#getAbbreviation()
+     */
+    public String getAbbreviation() {
+        return bmd.getAbbreviation();
+    }
+
+    /* (non-Javadoc)
      * @see org.crosswire.jsword.book.Book#getInitials()
      */
     public String getInitials() {
@@ -220,24 +229,31 @@ public abstract class AbstractBook implements Book {
     }
 
     /* (non-Javadoc)
-     * @see org.crosswire.jsword.book.Book#getProperties()
+     * @see org.crosswire.jsword.book.Book#getPropertyKeys()
      */
-    public Map<String, Object> getProperties() {
-        return bmd.getProperties();
+    public Set<String> getPropertyKeys() {
+        return bmd.getPropertyKeys();
     }
 
     /* (non-Javadoc)
      * @see org.crosswire.jsword.book.Book#getProperty(java.lang.String)
      */
-    public Object getProperty(String key) {
+    public String getProperty(String key) {
         return bmd.getProperty(key);
     }
 
     /* (non-Javadoc)
      * @see org.crosswire.jsword.book.Book#putProperty(java.lang.String, java.lang.Object)
      */
-    public void putProperty(String key, Object value) {
-        bmd.putProperty(key, value);
+    public void putProperty(String key, String value) {
+        bmd.putProperty(key, value, false);
+    }
+
+    /* (non-Javadoc)
+     * @see org.crosswire.jsword.book.Book#putProperty(java.lang.String, java.lang.String, boolean)
+     */
+    public void putProperty(String key, String value, boolean forFrontend) {
+        bmd.putProperty(key, value, forFrontend);
     }
 
     /* (non-Javadoc)

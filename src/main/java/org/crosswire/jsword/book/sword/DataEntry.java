@@ -8,21 +8,18 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
 
 import org.crosswire.common.crypt.Sapphire;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Data entry represents an entry in a Data file. The entry consists of a key
@@ -34,8 +31,7 @@ import org.slf4j.LoggerFactory;
  * <li>a block locator</li>
  * </ul>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class DataEntry {
@@ -54,7 +50,7 @@ public class DataEntry {
         this.data = data.clone();
         this.charset = charset;
         // The key always ends with \n, typically \r\n
-        this.keyEnd = SwordUtil.findByte(this.data, SEPARATOR);
+        this.keyEnd = SwordUtil.findByte(this.data, SEP_NL);
     }
 
     /**
@@ -81,20 +77,38 @@ public class DataEntry {
      */
     public String getKey() {
         if (key == null) {
+            // Some entries are empty
+            if (data.length == 0) {
+                key = "";
+                return key;
+            }
+
             if (keyEnd < 0) {
-                log.error("Failed to find key. name='{}'", name);
-                return "";
+                key = "";
+                return key;
+            }
+
+            int end = keyEnd;
+            // remove trailing \r if present
+            if (end > 0 && data[end - 1] == SEP_CR) {
+                --end;
+            }
+
+            // for some weird reason plain text dictionaries
+            // all get \ added to the ends of the index entries.
+            if (end > 0 && data[end - 1] == SEP_BSLASH) {
+                --end;
+            }
+
+            // If the end is 0 then we have an empty key.
+            if (end == 0) {
+                key = "";
+                return key;
             }
 
             // The key may have whitespace, including \r on the end,
             // that is not actually part of the key.
-            key = SwordUtil.decode(name, data, keyEnd, charset).trim();
-
-            // for some weird reason plain text dictionaries
-            // all get \ added to the ends of the index entries.
-            if (key.endsWith("\\")) {
-                key = key.substring(0, key.length() - 1);
-            }
+            key = SwordUtil.decode(name, data, end, charset);
         }
 
         return key;
@@ -160,7 +174,7 @@ public class DataEntry {
      */
     private int getLinkEnd() {
         if (linkEnd == 0) {
-            linkEnd = SwordUtil.findByte(data, keyEnd + 1, SEPARATOR);
+            linkEnd = SwordUtil.findByte(data, keyEnd + 1, SEP_NL);
             if (linkEnd == -1) {
                 linkEnd = data.length - 1;
             }
@@ -173,6 +187,8 @@ public class DataEntry {
      * 
      * @param cipherKey
      *            the key to the cipher
+     * @param offset
+     *            the start of the cipher data
      */
     public void cipher(byte[] cipherKey, int offset) {
         if (cipherKey != null && cipherKey.length > 0) {
@@ -189,8 +205,9 @@ public class DataEntry {
      * Used to separate the key name from the key value Note: it may be \r\n or
      * just \n, so only need \n. ^M=CR=13=0x0d=\r ^J=LF=10=0x0a=\n
      */
-    private static final byte SEPARATOR = 10;
-
+    private static final byte SEP_NL = (byte) '\n'; // 10;
+    private static final byte SEP_CR = (byte) '\r'; // 13;
+    private static final byte SEP_BSLASH = (byte) '\\'; // 92;
     /**
      * A diagnostic name.
      */
@@ -220,9 +237,4 @@ public class DataEntry {
      * The index of the separator between the link and the payload.
      */
     private int linkEnd;
-
-    /**
-     * The log stream
-     */
-    private static final Logger log = LoggerFactory.getLogger(DataEntry.class);
 }

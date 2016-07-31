@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -26,6 +25,7 @@ import java.io.RandomAccessFile;
 import org.crosswire.common.compress.CompressorType;
 import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
 import org.crosswire.jsword.book.sword.state.ZVerseBackendState;
 import org.crosswire.jsword.passage.BitwisePassage;
@@ -125,14 +125,15 @@ import org.slf4j.LoggerFactory;
  * </li>
  * </ul>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author Joe Walker
  * @author DM Smith
  */
 public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
     /**
      * Simple ctor
+     * @param sbmd 
+     * @param blockType 
      */
     public ZVerseBackend(SwordBookMetaData sbmd, BlockType blockType) {
         super(sbmd);
@@ -159,7 +160,7 @@ public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
         try {
             rafBook = initState();
 
-            String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+            String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
             Versification v11n = Versifications.instance().getVersification(v11nName);
             Verse verse = KeyUtil.getVerse(key);
 
@@ -195,7 +196,7 @@ public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
             log.error("Unable to ascertain key validity", e);
             return 0;
         } finally {
-            OpenFileStateManager.release(rafBook);
+            OpenFileStateManager.instance().release(rafBook);
         }
     }
 
@@ -208,7 +209,7 @@ public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
         try {
             rafBook = initState();
 
-            String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+            String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
             Versification v11n = Versifications.instance().getVersification(v11nName);
 
             Testament[] testaments = new Testament[] {
@@ -253,7 +254,7 @@ public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
         } catch (IOException e) {
             throw new BookException(JSMsg.gettext("Unable to read key list from book."));
         } finally {
-            OpenFileStateManager.release(rafBook);
+            OpenFileStateManager.instance().release(rafBook);
         }
     }
 
@@ -261,7 +262,7 @@ public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
      * @see org.crosswire.jsword.book.sword.StatefulFileBackedBackend#initState()
      */
     public ZVerseBackendState initState() throws BookException {
-        return OpenFileStateManager.getZVerseBackendState(getBookMetaData(), blockType);
+        return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
     }
 
     /* (non-Javadoc)
@@ -269,11 +270,11 @@ public class ZVerseBackend extends AbstractBackend<ZVerseBackendState> {
      */
     public String readRawContent(ZVerseBackendState rafBook, Key key) throws IOException {
 
-        SwordBookMetaData bookMetaData = getBookMetaData();
+        BookMetaData bookMetaData = getBookMetaData();
         final String charset = bookMetaData.getBookCharset();
-        final String compressType = (String) bookMetaData.getProperty(ConfigEntryType.COMPRESS_TYPE);
+        final String compressType = bookMetaData.getProperty(SwordBookMetaData.KEY_COMPRESS_TYPE);
 
-        final String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+        final String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         final Versification v11n = Versifications.instance().getVersification(v11nName);
         Verse verse = KeyUtil.getVerse(key);
 

@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -28,37 +27,38 @@ import java.util.List;
  * specific driver. This interface provides a common method of accessing all of
  * them.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @see gnu.lgpl.License
- * @author Joe Walker [joe at eireneh dot com]
+ * @author Joe Walker
  */
 public interface BookList {
     /**
      * Get a list of all the Books of all types.
+     * 
+     * @return the desired list of books
      */
     List<Book> getBooks();
 
     /**
      * Get a filtered list of all the Books.
      * 
+     * @param filter the filter to apply to the list of books
+     * @return the desired list of books
      * @see BookFilters
      */
     List<Book> getBooks(BookFilter filter);
 
     /**
-     * Remove a BibleListener from our list of listeners
+     * Add a BibleListener from our list of listeners
      * 
-     * @param li
-     *            The old listener
+     * @param li interested listener
      */
     void addBooksListener(BooksListener li);
 
     /**
-     * Add a BibleListener to our list of listeners
+     * Remove a BibleListener to our list of listeners
      * 
-     * @param li
-     *            The new listener
+     * @param li disinterested listener
      */
     void removeBooksListener(BooksListener li);
 }

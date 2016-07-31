@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.versification;
@@ -35,9 +34,8 @@ import org.crosswire.jsword.internationalisation.LocaleProviderManager;
 /**
  * BibleNames deals with locale sensitive BibleBook name lookup conversions.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class BibleNames {
@@ -75,6 +73,7 @@ public final class BibleNames {
      * Get the full name of a book (e.g. "Genesis"). Altered by the case setting
      * (see setBookCase())
      *
+     * @param book the book
      * @return The full name of the book or blank if not in this versification
      */
     public String getLongName(BibleBook book) {
@@ -85,6 +84,7 @@ public final class BibleNames {
      * Get the short name of a book (e.g. "Gen"). Altered by the case setting
      * (see setBookCase())
      *
+     * @param book the book
      * @return The short name of the book or blank if not in this versification
      */
     public String getShortName(BibleBook book) {
@@ -104,11 +104,19 @@ public final class BibleNames {
             book = BibleBook.fromOSIS(find);
 
             if (book == null) {
-                book = getLocalizedBibleNames().getBook(find);
+                book = getLocalizedBibleNames().getBook(find, false);
             }
 
             if (book == null) {
-                book = englishBibleNames.getBook(find);
+                book = englishBibleNames.getBook(find, false);
+            }
+
+            if (book == null) {
+                book = getLocalizedBibleNames().getBook(find, true);
+            }
+
+            if (book == null) {
+                book = englishBibleNames.getBook(find, true);
             }
         }
 
@@ -196,9 +204,9 @@ public final class BibleNames {
      * NameList is the internal, internationalize list of names
      * for a locale.
      *
-     * @see gnu.lgpl.License for license details.<br>
-     *      The copyright to this program is held by it's authors.
-     * @author DM Smith [dmsmith555 at yahoo dot com]
+     * @see gnu.lgpl.License The GNU Lesser General Public License for details.<br>
+     *      The copyright to this program is held by its authors.
+     * @author DM Smith
      */
     private class NameList {
         /**
@@ -254,9 +262,11 @@ public final class BibleNames {
          * 
          * @param find
          *            The string to identify
+         * @param fuzzy
+         *            Whether to also find bible books where only a substring matches
          * @return The BibleBook, On error null
          */
-        BibleBook getBook(String find) {
+        BibleBook getBook(String find, boolean fuzzy) {
             String match = BookName.normalize(find, locale);
 
             BookName bookName = fullNT.get(match);
@@ -302,6 +312,10 @@ public final class BibleNames {
             bookName = altNC.get(match);
             if (bookName != null) {
                 return bookName.getBook();
+            }
+
+            if (!fuzzy) {
+                return null;
             }
 
             for (BookName aBook : books.values()) {

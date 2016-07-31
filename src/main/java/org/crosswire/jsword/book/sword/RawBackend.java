@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -25,6 +24,7 @@ import java.io.RandomAccessFile;
 
 import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
 import org.crosswire.jsword.book.sword.state.RawBackendState;
 import org.crosswire.jsword.passage.BitwisePassage;
@@ -43,14 +43,16 @@ import org.slf4j.LoggerFactory;
  * abstracts out the similarities.
  * 
  * @param <T> The type of the RawBackendState that this class extends.
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBackendState> {
 
     /**
      * Simple ctor
+     * 
+     * @param sbmd 
+     * @param datasize 
      */
     public RawBackend(SwordBookMetaData sbmd, int datasize) {
         super(sbmd);
@@ -73,7 +75,7 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
      */
     @Override
     public int getRawTextLength(Key key) {
-        String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+        String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         Versification v11n = Versifications.instance().getVersification(v11nName);
         Verse verse = KeyUtil.getVerse(key);
 
@@ -98,7 +100,7 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
         } catch (BookException e) {
             return 0;
         } finally {
-            OpenFileStateManager.release(initState);
+            OpenFileStateManager.instance().release(initState);
         }
     }
 
@@ -108,7 +110,7 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
         try {
             rafBook = initState();
 
-            String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+            String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
             Versification v11n = Versifications.instance().getVersification(v11nName);
 
             Testament[] testaments = new Testament[] {
@@ -165,12 +167,12 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
         } catch (IOException e) {
             throw new BookException(JSMsg.gettext("Unable to read key list from book."));
         } finally {
-            OpenFileStateManager.release(rafBook);
+            OpenFileStateManager.instance().release(rafBook);
         }
     }
 
     public T initState() throws BookException {
-        return (T) OpenFileStateManager.getRawBackendState(getBookMetaData());
+        return (T) OpenFileStateManager.instance().getRawBackendState(getBookMetaData());
     }
 
     public String getRawText(RawBackendState state, Key key) throws IOException {
@@ -181,7 +183,7 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
      * @see org.crosswire.jsword.book.sword.AbstractBackend#getRawText(org.crosswire.jsword.passage.Key)
      */
     public String readRawContent(RawBackendState state, Key key) throws IOException {
-        String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+        String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         Versification v11n = Versifications.instance().getVersification(v11nName);
         Verse verse = KeyUtil.getVerse(key);
 
@@ -196,7 +198,7 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
         } catch (BookException e) {
             return "";
         } finally {
-            OpenFileStateManager.release(initState);
+            OpenFileStateManager.instance().release(initState);
         }
     }
 
@@ -218,7 +220,7 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
         } catch (BookException e) {
             return false;
         } finally {
-            OpenFileStateManager.release(rawBackendState);
+            OpenFileStateManager.instance().release(rawBackendState);
         }
     }
 
@@ -301,7 +303,6 @@ public class RawBackend<T extends RawBackendState> extends AbstractBackend<RawBa
 
         return SwordUtil.decode(name, data, getBookMetaData().getBookCharset());
     }
-
 
     /**
      * How many bytes in the size count in the index

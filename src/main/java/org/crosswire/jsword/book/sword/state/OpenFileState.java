@@ -8,33 +8,42 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2013 - 2016
  *
  */
 package org.crosswire.jsword.book.sword.state;
 
 import java.io.Closeable;
 
-import org.crosswire.jsword.book.sword.SwordBookMetaData;
+import org.crosswire.jsword.book.BookMetaData;
 
 /**
  * Marker interface for objects holding open files that should be freed up upon finishing
  *
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public interface OpenFileState extends Closeable {
 
-    SwordBookMetaData getBookMetaData();
+    BookMetaData getBookMetaData();
 
     void releaseResources();
+
+    /**
+     * @return latest access before releasing back to the pool
+     */
+    long getLastAccess();
+
+    /**
+     * Sets the last access time
+     * @param lastAccess the time at which this instance was last accessed
+     */
+    void setLastAccess(long lastAccess);
 }

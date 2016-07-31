@@ -8,23 +8,21 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
 
 import java.net.URI;
-import java.util.Map;
+import java.util.Set;
 
 import org.crosswire.common.util.Language;
-import org.crosswire.jsword.book.sword.MissingDataFilesException;
 import org.crosswire.jsword.index.IndexStatus;
 import org.jdom2.Document;
 
@@ -33,31 +31,35 @@ import org.jdom2.Document;
  * the same BookMetaData should return identical text for any call to
  * <code>Bible.getText(VerseRange)</code>. The implication of this is that there
  * may be many instances of the Version "NIV", as there are several different
- * versions of the NIV - Original American-English, Anglicized, and Inclusive
+ * versions of the NIV - Original American-English, Anglicised, and Inclusive
  * Language editions at least.
  * 
  * <p>
- * BookMetaData like Strings must be compared using <code>.equals()<code>
+ * BookMetaData like Strings must be compared using <code>.equals()</code>
  * instead of ==. A Bible must have the ability to handle a book unknown to
  * JSword. So Books must be able to add versions to the system, and the system
  * must cope with books that already exist.
  * </p>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public interface BookMetaData extends Comparable<BookMetaData> {
     /**
      * The name of the book, for example "King James Version" or
-     * "Bible in Basic English" or "Greek". In general it should be possible to
-     * deduce the initials from the name by removing all the non-capital
-     * letters. Although this is only a generalization. This method should not
+     * "Bible in Basic English" or "Greek". This method should not
      * return null or a blank string.
      * 
      * @return The name of this book
      */
     String getName();
+
+    /**
+     * With which Charset is this Book encoded?
+     * 
+     * @return the encoding of the Book
+     */
+    String getBookCharset();
 
     /**
      * How this Book organizes it's keys.
@@ -78,6 +80,8 @@ public interface BookMetaData extends Comparable<BookMetaData> {
      * Accessor for the driver that runs this Book. Note this method should only
      * be used to delete() Books. Everything else you should want to do to a
      * Book should be available in other ways.
+     * 
+     * @return the driver for the book.
      */
     BookDriver getDriver();
 
@@ -89,10 +93,25 @@ public interface BookMetaData extends Comparable<BookMetaData> {
     Language getLanguage();
 
     /**
+     * Set the language for this book.
+     * 
+     * @param language
+     *            the book's language
+     */
+    void setLanguage(Language language);
+
+    /**
      * The initials of this book - how people familiar with this book will know
      * it, for example "NIV", "KJV".
      * 
      * @return The book's initials
+     */
+    String getAbbreviation();
+
+    /**
+     * The internal name of this book.
+     * 
+     * @return The book's internal name
      */
     String getInitials();
 
@@ -182,6 +201,9 @@ public interface BookMetaData extends Comparable<BookMetaData> {
 
     /**
      * Return whether the feature is supported by the book.
+     * 
+     * @param feature the feature in question
+     * @return true if the book supports the feature
      */
     boolean hasFeature(FeatureType feature);
 
@@ -197,9 +219,9 @@ public interface BookMetaData extends Comparable<BookMetaData> {
      * 
      * @param library
      *            the base URI or null if there is none
-     * @throws MissingDataFilesException  indicates missing data files
+     * @throws BookException  indicates missing data files
      */
-    void setLibrary(URI library) throws MissingDataFilesException;
+    void setLibrary(URI library) throws BookException;
 
     /**
      * Get the base URI for relative URIs in the document.
@@ -217,30 +239,64 @@ public interface BookMetaData extends Comparable<BookMetaData> {
     void setLocation(URI library);
 
     /**
+     * If this BookMetaData is partially loaded, reload it fully.
+     * If it is fully loaded, don't do it again.
+     * 
+     * @throws BookException when a problem is encountered loading the file
+     */
+    void reload() throws BookException;
+
+    /**
      * Get a list of all the properties available to do with this Book. The
      * returned Properties will be read-only so any attempts to alter it will
      * fail.
+     * 
+     * @return the read-only properties for this book
      */
-    Map<String, Object> getProperties();
+    Set<String> getPropertyKeys();
 
     /**
+     * Get the property or null.
+     * 
      * @param key
      *            the key of the property.
      * @return the value of the property
      */
-    Object getProperty(String key);
+    String getProperty(String key);
 
     /**
+     * Store a transient property.
+     * 
      * @param key
      *            the key of the property to set
      * @param value
      *            the value of the property
      */
-    void putProperty(String key, Object value);
+    void setProperty(String key, String value);
+
+    /**
+     * Save to shared storage.
+     * 
+     * @param key
+     *            the key of the property to set
+     * @param value
+     *            the value of the property
+     */
+    void putProperty(String key, String value);
+
+    /**
+     * Saves an entry to a particular configuration file.
+     * 
+     * @param key the entry that we are saving
+     * @param value the value of the entry
+     * @param forFrontend when {@code true} save to front end storage, else in shared storage
+     */
+    void putProperty(String key, String value, boolean forFrontend);
 
     /**
      * Has anyone generated a search index for this Book?
      * 
+     * @return the status for the index of this book.
      * @see org.crosswire.jsword.index.IndexManager
      */
     IndexStatus getIndexStatus();
@@ -249,12 +305,15 @@ public interface BookMetaData extends Comparable<BookMetaData> {
      * This method does not alter the index status, however it is for Indexers
      * that are responsible for indexing and have changed the status themselves.
      * 
+     * @param status the status for the index of this book
      * @see org.crosswire.jsword.index.IndexManager
      */
     void setIndexStatus(IndexStatus status);
 
     /**
      * Get an OSIS representation of information concerning this Book.
+     * 
+     * @return the OSIS representation of information about this book.
      */
     Document toOSIS();
 
@@ -281,7 +340,12 @@ public interface BookMetaData extends Comparable<BookMetaData> {
     /**
      * The key for the language in the properties map
      */
-    String KEY_XML_LANG = "Lang";
+    String KEY_LANG = "Lang";
+
+    /**
+     * The key for the language in the properties map
+     */
+    String KEY_LANGUAGE = "Language";
 
     /**
      * The key for the font in the properties map
@@ -289,27 +353,11 @@ public interface BookMetaData extends Comparable<BookMetaData> {
     String KEY_FONT = "Font";
 
     /**
-     * The key for the initials in the properties map
-     */
-    String KEY_INITIALS = "Initials";
-
-    /**
-     * The key for the URI locating where this book is installed
-     */
-    String KEY_LIBRARY_URI = "LibraryURI";
-
-    /**
-     * The key for the URI locating this book
-     */
-    String KEY_LOCATION_URI = "LocationURI";
-
-    /**
-     * The key for the indexed status in the properties map
-     */
-    String KEY_INDEXSTATUS = "IndexStatus";
-
-    /**
      * The key for the Versification property.
      */
     String KEY_VERSIFICATION = "Versification";
+
+    String KEY_BOOKLIST = "BookList";
+
+    String KEY_SCOPE = "Scope";
 }

@@ -74,6 +74,8 @@
 	=========================================================================-->
 	<patternset	id="patternset.runtime">
 		<exclude name="**/junit*.jar" />
+		<exclude name="**/hamcrest*.jar" />
+		<exclude name="**/mockito*.jar" />
 		<include name="**/*.jar" />
 	</patternset>
 	<path id="classpath.runtime">
@@ -193,6 +195,7 @@
 
 	<!--=======================================================================
 	== Build everything that has changed, test it and then install the changes.
+			depends="incremental.dependency, prepare, build, test, tools, install"
 	=========================================================================-->
 	<target	name="incremental"
 			depends="incremental.dependency, prepare, build, test, tools, install"
@@ -394,12 +397,10 @@
 				use="true"
 				splitindex="true"
 				version="true"
-				source="1.5"
+				source="1.7"
 				failonerror="false">
-			<footer>Copyright &#168; 2003-2013</footer>
-			<link	offline="true"
-					href="http://download.oracle.com/javase/1.5.0/docs/api/"
-					packagelistLoc="${etc.shared.dir}/javadoc"/>
+			<footer>Copyright &#168; 2003-2015</footer>
+			<link	href="http://docs.oracle.com/javase/1.7.0/docs/api/"/>
 		</javadoc>
 	</target>
 
@@ -407,7 +408,7 @@
 	== Use ivy to manage external jars.
 	== These are properties related to ivy.
 	=========================================================================-->
-	<property name="ivy.version"			value="2.3.0" />
+	<property name="ivy.version"			value="2.4.0" />
 	<property name="ivy.home"				location="${tools.home}/ivy" />
 	<property name="ivy.url"				value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" />
 	<property name="ivy.jar.file"			location="${ivy.home}/ivy-${ivy.version}.jar" />
@@ -469,17 +470,17 @@
 	=========================================================================-->
 	<target	name="tools"
 			description="Run QA reports"
-			depends="javancss, checkstyle, findbugs, pmd, cpd, jdepend, java2html"
+			depends="checkstyle, findbugs, pmd, cpd, jdepend, java2html"
 			if="src.main.java.present"/>
 
 	<!--=======================================================================
 	== Use Checkstyle to check the style of JSword files
 	== These are properties related to checkstyle.
 	=========================================================================-->
-	<property name="checkstyle.version"		value="5.7" />
+	<property name="checkstyle.version"		value="6.14" />
 	<property name="checkstyle.home"		location="${tools.home}/checkstyle-${checkstyle.version}" />
 	<property name="checkstyle.report"		location="${report.dir}/checkstyle" />
-	<property name="checkstyle.url"			value="http://sourceforge.net/projects/checkstyle/files/checkstyle/${checkstyle.version}/checkstyle-${checkstyle.version}-bin.zip" />
+	<property name="checkstyle.url"			value="http://downloads.sourceforge.net/project/checkstyle/checkstyle/${checkstyle.version}/checkstyle-${checkstyle.version}-bin.zip" />
 	<property name="checkstyle.zip"			location="${tools.home}/checkstyle-${checkstyle.version}.zip" />
 	<property name="checkstyle.jar.file"	location="${checkstyle.home}/checkstyle-${checkstyle.version}-all.jar" />
 	<property name="checkstyle.fail"		value="false" />
@@ -494,13 +495,14 @@
 				failOnViolation="${checkstyle.fail}">
 			<property key="checkstyle.basedir" file="${src.main.java.dir}"/>
 			<property key="checkstyle.cache.file" file="${checkstyle.report}/checkstyle.cache.dat"/>
+			<property key="checkstyle.header.file" file="${etc.shared.dir}/checkstyle/license.checkstyle.txt"/>
 			<fileset dir="${src.main.java.dir}" includes="**/*.java" />
 			<formatter type="plain"/>
 			<formatter type="xml" toFile="${checkstyle.report}/checkstyle_errors.xml"/>
 		</checkstyle>
 		<xslt	in="${checkstyle.report}/checkstyle_errors.xml"
 				out="${checkstyle.report}/index.html"
-				style="${checkstyle.home}/contrib/checkstyle-simple.xsl">
+				style="${etc.shared.dir}/checkstyle/checkstyle-simple.xsl">
 			<xmlcatalog refid="commonDTDs"/>
 		</xslt>
 	</target>
@@ -508,7 +510,7 @@
 	<!-- Make checkstyle visible to Ant -->
 	<target	name="checkstyle.task"
 			depends="checkstyle.download">
-		<taskdef resource="checkstyletask.properties" classpath="${checkstyle.jar.file}" />
+		<taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar.file}" />
 	</target>
 
 	<!-- Download checkstyle -->
@@ -530,10 +532,10 @@
 	== Use findbugs to find bugs.
 	== These are properties related to findbugs.
 	=========================================================================-->
-	<property name="findbugs.version"		value="2.0.3" />
+	<property name="findbugs.version"		value="3.0.0" />
 	<property name="findbugs.home"			location="${tools.home}/findbugs-${findbugs.version}" />
 	<property name="findbugs.report"		location="${report.dir}/findbugs" />
-	<property name="findbugs.url"			value="http://prdownloads.sourceforge.net/findbugs/findbugs-${findbugs.version}.zip?download" />
+	<property name="findbugs.url"			value="http://downloads.sourceforge.net/project/findbugs/findbugs/${findbugs.version}/findbugs-${findbugs.version}.zip" />
 	<property name="findbugs.zip"			location="${tools.home}/findbugs-${findbugs.version}.zip" />
 
 	<target	name="findbugs"
@@ -582,11 +584,11 @@
 	== Use PMD and CPD to find bad code
 	== These are properties related to PMD.
 	=========================================================================-->
-	<property name="pmd.version"			value="5.1.0" />
+	<property name="pmd.version"			value="5.1.3" />
 	<property name="pmd.home"				location="${tools.home}/pmd-bin-${pmd.version}" />
 	<property name="pmd.report"				location="${report.dir}/pmd" />
 	<property name="cpd.report"				location="${report.dir}/cpd" />
-	<property name="pmd.url"				value="http://sourceforge.net/projects/pmd/files/pmd/${pmd.version}/pmd-bin-${pmd.version}.zip/download" />
+	<property name="pmd.url"				value="http://downloads.sourceforge.net/project/pmd/pmd/${pmd.version}/pmd-bin-${pmd.version}.zip" />
 	<property name="pmd.zip"				location="${tools.home}/pmd-bin-${pmd.version}.zip" />
 
 	<target	name="pmd"
@@ -666,7 +668,7 @@
 	<property name="cobertura.version"		value="2.0.3" />
 	<property name="cobertura.home"			location="${tools.home}/cobertura-${cobertura.version}" />
 	<property name="cobertura.report"		location="${report.dir}/cobertura" />
-	<property name="cobertura.url"			value="http://sourceforge.net/projects/cobertura/files/cobertura/${cobertura.version}/cobertura-${cobertura.version}-bin.zip/download" />
+	<property name="cobertura.url"			value="http://downloads.sourceforge.net/project/cobertura/cobertura/${cobertura.version}/cobertura-${cobertura.version}-bin.zip" />
 	<property name="cobertura.zip"			location="${tools.home}/cobertura-${cobertura.version}.zip" />
 	<property name="cobertura.instrument.dir"	value="${cobertura.report}/tmp" />
 	<property name="cobertura.datafile"		value="${cobertura.instrument.dir}/cobertura.ser" />
@@ -696,10 +698,9 @@
 			<formatter type="xml" />
 			<batchtest fork="yes" todir="${junit.report}">
 				<fileset dir="${dest.test.classes.dir}">
-					<include name="**/*Test*.class"/>
+					<include name="**/*Test.class"/>
 					<exclude name="**/*AllTests*"/>
 					<exclude name="**/*$$*"/>
-					<exclude name="**/*Speed*"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -790,7 +791,7 @@
 	<property name="java2html.version"		value="1.5.1" />
 	<property name="java2html.home"			location="${tools.home}/java2html-${java2html.version}" />
 	<property name="java2html.report"		location="${report.dir}/java2html" />
-	<property name="java2html.url"			value="http://www.java2html.com/Java2HTML.zip"/>
+	<property name="java2html.url"			value="http://www.java2html.com/Java2HTML.zip"/> <!-- http://ccgi.vaegar.force9.co.uk/Java2HTML.zip"/>  -->
 	<property name="java2html.zip"			location="${tools.home}/Java2HTML.zip"/>
 
 	<target	name="java2html"
@@ -805,7 +806,7 @@
 				footer="false"
 				destination="${java2html.report}">
 			<fileset dir="${src.main.java.dir}" includes="**/*.java" />
-			<javadoc localRef="${etc.shared.dir}/javadoc" httpRef="http://download.oracle.com/javase/1.5.0/docs/api/"/>
+			<javadoc localRef="${etc.shared.dir}/javadoc" httpRef="http://download.oracle.com/javase/1.7.0/docs/api/"/>
 		</java2html>    
 	</target>
 
@@ -832,7 +833,7 @@
 
 	<!-- See if Java2HTML is installed -->
 	<target	name="java2html.check">
-		<available file="${java2html.home}"		type="dir"  property="java2html.present" />
+		<available file="${java2html.home}/j2h.jar"		type="file"  property="java2html.present" />
 	</target>
 
 	<!--=======================================================================
@@ -906,10 +907,10 @@
 	== Use Javancss to do analyze Non Commenting Source Statements
 	== These are properties related to Javancss.
 	=========================================================================-->
-	<property name="javancss.version"		value="32.53" />
+	<property name="javancss.version"		value="33.54" />
 	<property name="javancss.home"			location="${tools.home}/javancss-${javancss.version}" />
 	<property name="javancss.report"		location="${report.dir}/javancss" />
-	<property name="javancss.url"			value="http://www.kclee.de/clemens/java/javancss/javancss-${javancss.version}.zip"/>
+	<property name="javancss.url"			value="http://javancss.mojohaus.org/javancss-${javancss.version}.zip"/>
 	<property name="javancss.zip"			location="${tools.home}/javancss-${javancss.version}.zip" />
 
 	<target name="javancss"
@@ -960,7 +961,7 @@
 	<property name="nsis.version"		value="1.3" />
 	<property name="nsis.home"			location="${tools.home}/nsis-${nsis.version}" />
 	<property name="nsis.report"		location="${report.dir}/nsis" />
-	<property name="nsis.url"			value="http://cloud.github.com/downloads/dreese/nsis-ant/nsisant-${nsis.version}.jar"/>
+	<property name="nsis.url"			value="https://cloud.github.com/downloads/dreese/nsis-ant/nsisant-${nsis.version}.jar"/>
 
 	<target	name="nsis.task"
 			depends="nsis.download, nsis.verify">
@@ -970,7 +971,7 @@
 		<taskdef name="nsis" classpathref="nsis.classpath" classname="com.danielreese.nsisant.Task"/>
 	</target>
 
-	<!-- JDepend visibility instructions -->
+	<!-- NSIS visibility instructions -->
 	<target name="nsis.verify"
 		    depends="nsis.visible"
 	        unless="nsis.available">
@@ -983,7 +984,7 @@
 		<echo>Otherwise, run the nsis.antlibs task to copy jars to ANT_HOME/lib</echo>
 	</target>
 
-	<!-- Check to see if JDepend is visible to Ant. -->
+	<!-- Check to see if NSIS is visible to Ant. -->
 	<target name="nsis.visible">
 	    <available property="nsis.available"
 	               classname="com.danielreese.nsisant.Task"/>
@@ -1018,6 +1019,69 @@
 			description="Copy required nsis jars to ant/lib">
 		<echo message="copy ${nsis.home}/nsisant-${nsis.version}.jar"/>
 		<copy file="${nsis.home}/nsisant-${nsis.version}.jar" todir="${ant.home}/lib"/>
+	</target>
+
+	<!--=======================================================================
+	== Use AppBundler to create a MacOSX app
+	== These are properties related to AppBundler.
+	=========================================================================-->
+	<property name="appbundler.version"		value="1.0ea" />
+	<property name="appbundler.home"		location="${tools.home}/appbundler-${appbundler.version}" />
+	<property name="appbundler.report"		location="${report.dir}/appbundler" />
+	<property name="appbundler.url"			value="http://www.crosswire.org/~dmsmith/appbundler/appbundler-${appbundler.version}.jar"/>
+
+	<target	name="appbundler.task"
+			depends="appbundler.download, appbundler.verify">
+		<taskdef name="bundleapp" classpath="${appbundler.home}/appbundler-${appbundler.version}.jar" classname="com.oracle.appbundler.AppBundlerTask"/>
+	</target>
+
+	<!-- AppBundler visibility instructions -->
+	<target name="appbundler.verify"
+		    depends="appbundler.visible"
+	        unless="appbundler.available">
+		<echo>$${appbundler.available}=${appbundler.available}</echo>
+		<echo>AppBundler cannot run. appbundler-${appbundler.version}.jar is not visible to Ant.</echo>
+		<echo>To make it visible you need to do one of two things depending</echo>
+		<echo>on whether you are running ant in Eclipse or not.</echo>
+		<echo>In Eclipse, add appbundler-*.jar to Preferences -> Ant -> Runtime -> Global Entries</echo>
+		<echo>Otherwise, run the appbundler.antlibs task to copy jars to ANT_HOME/lib</echo>
+	</target>
+
+	<!-- Check to see if AppBundler is visible to Ant. -->
+	<target name="appbundler.visible">
+	    <available property="appbundler.available"
+	               classname="com.oracle.appbundler.AppBundlerTask"/>
+	</target>
+
+	<!-- Download AppBundler -->
+	<target	name="appbundler.download"
+			depends="appbundler.check"
+			unless="appbundler.present">
+		<mkdir	dir="${tools.home}" />
+		<mkdir	dir="${appbundler.home}" />
+		<get	src="${appbundler.url}"	dest="${appbundler.home}"	usetimestamp="true" />
+	</target>
+
+	<!-- See if AppBundler is installed -->
+	<target	name="appbundler.check">
+		<available file="${appbundler.home}/appbundler-${appbundler.version}.jar"		type="file"  property="appbundler.present" />
+	</target>
+
+	<!-- the only purpose of this is to provide a useful diagnostic. -->
+	<target	name="appbundler">
+	    <echo>AppBundler may fail if appbundler.jar is not visible to Ant.
+	To make the task visible you need to do one of two things depending
+	on whether you are running ant in Eclipse or not.
+	In Eclipse, add appbundler-*.jar to Preferences -> Ant -> Runtime -> Global Entries
+	Otherwise, run the appbundler.antlibs task to copy jars to ANT_HOME/lib</echo>
+	</target>
+
+	<!-- This does not need to be done in Eclipse. Add it to Ant preferences instead -->
+	<target	name="appbundler.antlibs"
+			depends="appbundler.download"
+			description="Copy required appbundler jars to ant/lib">
+		<echo message="copy ${appbundler.home}/appbundler-${appbundler.version}.jar"/>
+		<copy file="${appbundler.home}/appbundler-${appbundler.version}.jar" todir="${ant.home}/lib"/>
 	</target>
 
 	<!--=======================================================================

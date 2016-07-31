@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -41,7 +40,7 @@ import org.crosswire.jsword.versification.system.Versifications;
  * Most of the methods take the same arguments:
  * </p>
  * <ul>
- * <li><strong>Versification v11n<strong> - All Passages are created as part
+ * <li><strong>Versification v11n</strong> - All Passages are created as part
  * of a Versification. Verses and VerseRanges which make up a Passage, require
  * a one.</li>
  * <li><strong>String passageReference</strong> - A string representation for the Passage.
@@ -62,9 +61,8 @@ import org.crosswire.jsword.versification.system.Versifications;
  * of the exception will give the precise reason for the failure.</li></ul>
  * 
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class PassageKeyFactory {
@@ -165,7 +163,7 @@ public final class PassageKeyFactory {
         } catch (NoSuchKeyException e) {
             try {
                 return defaultType.createPassage(v11n, normalize(passageReference), basis);
-            } catch (NoSuchKeyException e1) {
+            } catch (NoSuchKeyException ex) {
                 // TODO(DM): Parser should allow valid osisRefs!
                 return defaultType.createPassage(v11n, mungOsisRef(passageReference), basis);
             }
@@ -278,14 +276,14 @@ public final class PassageKeyFactory {
         int ranges = ref.countRanges(RestrictionType.NONE);
 
         // the size in bytes of teach storage method
-        int bitwise_size = maxOrdinal / 8;
-        int ranged_size = (ranges * 4) + 1;
-        int distinct_size = (verses * 2) + 1;
+        int bitwiseSize = maxOrdinal / 8;
+        int rangedSize = (ranges * 4) + 1;
+        int distinctSize = (verses * 2) + 1;
 
         // if bitwise is equal smallest
-        if (bitwise_size <= ranged_size && bitwise_size <= distinct_size) {
-            int array_size = binarySize(AbstractPassage.METHOD_COUNT) + (maxOrdinal / 8) + 1;
-            byte[] buffer = new byte[array_size];
+        if (bitwiseSize <= rangedSize && bitwiseSize <= distinctSize) {
+            int arraySize = binarySize(AbstractPassage.METHOD_COUNT) + (maxOrdinal / 8) + 1;
+            byte[] buffer = new byte[arraySize];
             int index = 0;
 
             index += toBinary(buffer, index, AbstractPassage.BITWISE, AbstractPassage.METHOD_COUNT);
@@ -304,11 +302,11 @@ public final class PassageKeyFactory {
             }
 
             return buffer;
-        } else if (distinct_size <= ranged_size) {
+        } else if (distinctSize <= rangedSize) {
             // if distinct is not bigger than ranged
-            int array_size = binarySize(AbstractPassage.METHOD_COUNT) + binarySize(maxOrdinal)
+            int arraySize = binarySize(AbstractPassage.METHOD_COUNT) + binarySize(maxOrdinal)
                     + (verses * binarySize(maxOrdinal));
-            byte[] buffer = new byte[array_size];
+            byte[] buffer = new byte[arraySize];
             int index = 0;
 
             // write the Passage type and the number of verses. There must be
@@ -326,9 +324,9 @@ public final class PassageKeyFactory {
             return buffer;
         } else {
             // otherwise use ranges
-            int array_size = binarySize(AbstractPassage.METHOD_COUNT) + binarySize(maxOrdinal / 2)
+            int arraySize = binarySize(AbstractPassage.METHOD_COUNT) + binarySize(maxOrdinal / 2)
                     + (2 * ranges * binarySize(maxOrdinal));
-            byte[] buffer = new byte[array_size];
+            byte[] buffer = new byte[arraySize];
             int index = 0;
 
             // write the Passage type and the number of ranges
@@ -592,30 +590,35 @@ public final class PassageKeyFactory {
 
         char curChar = ' ';
         boolean isNumber = false;
-        boolean wasNumber = false;
+        boolean wasNumberOrMarker = false;
+        boolean isEndMarker = false;
+        boolean isNumberOrMarker = false;
         int i = 0;
         while (i < size) {
             curChar = passageReference.charAt(i);
 
             // Determine whether we are starting a number
-            isNumber = curChar == '$' || Character.isDigit(curChar) || (curChar == 'f' && (i + 1 < size ? passageReference.charAt(i + 1) : ' ') == 'f');
-
+            isNumber = Character.isDigit(curChar);
+            isEndMarker = curChar == '$' || (curChar == 'f' && (i + 1 < size ? passageReference.charAt(i + 1) : ' ') == 'f');
+            isNumberOrMarker = isNumber || isEndMarker;
             // If the last thing we saw was a number and the next thing we see
             // is another number or a word
             // then we want to put in a ',' or a ' '
-            if (wasNumber) {
+            if (wasNumberOrMarker) {
                 if (isNumber) {
                     buf.append(AbstractPassage.REF_PREF_DELIM);
+                } else if (isEndMarker) {
+                    buf.append(VerseRange.RANGE_OSIS_DELIM);
                 } else if (Character.isLetter(curChar)) {
                     buf.append(' ');
                 }
 
                 // Having handled the condition, we now set it to false
-                wasNumber = false;
+                wasNumberOrMarker = false;
             }
 
-            if (isNumber) {
-                wasNumber = true;
+            if (isNumberOrMarker) {
+                wasNumberOrMarker = true;
                 buf.append(curChar);
                 i++;
 

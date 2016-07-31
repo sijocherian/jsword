@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -42,9 +41,8 @@ import org.slf4j.LoggerFactory;
  * The Books class (along with Book) is the central point of contact between the
  * rest of the world and this set of packages.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class Books extends AbstractBookList {
@@ -120,6 +118,8 @@ public final class Books extends AbstractBookList {
     /**
      * Add a Book to the current list of Books. This method should only be
      * called by BibleDrivers, it is not a method for general consumption.
+     * 
+     * @param book the book to add to this book list
      */
     public synchronized void addBook(Book book) {
         if (book != null && books.add(book)) {
@@ -132,6 +132,9 @@ public final class Books extends AbstractBookList {
     /**
      * Remove a Book from the current list of Books. This method should only be
      * called by BibleDrivers, it is not a method for general consumption.
+     * 
+     * @param book the book to be removed from this book list
+     * @throws BookException when an error occurs when performing this method
      */
     public synchronized void removeBook(Book book) throws BookException {
         // log.debug("unregistering book: {}", bmd.getName());
@@ -155,6 +158,7 @@ public final class Books extends AbstractBookList {
      * 
      * @param driver
      *            The BookDriver to add
+     * @throws BookException when an error occurs when performing this method
      */
     public synchronized void registerDriver(BookDriver driver) throws BookException {
         log.debug("begin registering driver: {}", driver.getClass().getName());
@@ -191,6 +195,9 @@ public final class Books extends AbstractBookList {
      * Since Books keeps a track of drivers itself, including creating them when
      * registered it can be hard to get a hold of the current book driver. This
      * method gives access to the registered instances.
+     * 
+     * @param type the type of BookDriver
+     * @return matching BookDrivers
      */
     public synchronized BookDriver[] getDriversByClass(Class<? extends BookDriver> type) {
         List<BookDriver> matches = new ArrayList<BookDriver>();

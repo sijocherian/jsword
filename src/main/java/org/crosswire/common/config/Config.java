@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/llgpl.html
+ *       http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.config;
@@ -45,25 +44,22 @@ import org.slf4j.LoggerFactory;
  * Config is the core part of the configuration system; it is simply a
  * Collection of <code>Choice</code>s.
  * 
- * <p>
  * Config does the following things:
  * <ul>
- * <li>Provides a GUI independant API with which to create GUIs</li>
+ * <li>Provides a GUI independent API with which to create GUIs</li>
  * <li>Stores a local store of settings</li>
  * <li>Allows updates to the local store</li>
  * </ul>
- * </p>
  * 
- * <p>
+ * 
  * Config does not attempt to make permanent copies of the config data because
- * different apps may wish to store the data in different ways. Possible storage
+ * different applications may wish to store the data in different ways. Possible storage
  * mechanisms include:
  * <ul>
  * <li>Properties Files</li>
  * <li>Resource Objects (J2SE 1.4)</li>
  * <li>Network Sockets (see Remote)</li>
  * </ul>
- * </p>
  * 
  * The Config class stored the current Choices, and moves the data between the
  * various places that it is stored. There are 4 storage areas:
@@ -78,9 +74,8 @@ import org.slf4j.LoggerFactory;
  * to screen without involving the app.
  * </ul>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class Config implements Iterable<Choice> {
     /**
@@ -98,6 +93,9 @@ public class Config implements Iterable<Choice> {
     }
 
     /**
+     * The name for the dialog boxes and properties files.
+     * 
+     * @return the title for this config
      */
     public String getTitle() {
         return title;
@@ -119,7 +117,7 @@ public class Config implements Iterable<Choice> {
         String value = model.getString();
         if (value == null) {
             value = "";
-            log.info("key={} had a null value", key);
+            LOGGER.info("key={} had a null value", key);
         }
 
         local.put(key, value);
@@ -161,7 +159,7 @@ public class Config implements Iterable<Choice> {
             }
 
             if (ex != null) {
-                log.warn("Error creating config element, key={}", key, ex);
+                LOGGER.warn("Error creating config element, key={}", key, ex);
             }
         }
     }
@@ -186,7 +184,7 @@ public class Config implements Iterable<Choice> {
     /**
      * The set of Choice that we are controlling
      * 
-     * @return An enumeration over the choices
+     * @return An iterator over the choices
      */
     public Iterator<Choice> iterator() {
         return models.iterator();
@@ -195,6 +193,7 @@ public class Config implements Iterable<Choice> {
     /**
      * Get the Choice for a given key
      * 
+     * @param key the key for the choice
      * @return the requested choice
      */
     public Choice getChoice(String key) {
@@ -217,7 +216,10 @@ public class Config implements Iterable<Choice> {
 
     /**
      * Set a configuration Choice (by name) to a new value. This method is only
-     * of use to classes displaying config information
+     * of use to classes displaying config information.
+     * 
+     * @param name the key for the choice
+     * @param value the value for the choice
      */
     public void setLocal(String name, String value) {
         assert name != null;
@@ -228,7 +230,10 @@ public class Config implements Iterable<Choice> {
 
     /**
      * Get a configuration Choice (by name). This method is only of use to
-     * classes displaying config information
+     * classes displaying config information.
+     * 
+     * @param name the key for the choice
+     * @return the value for the choice.
      */
     public String getLocal(String name) {
         return local.get(name);
@@ -269,14 +274,14 @@ public class Config implements Iterable<Choice> {
             // if force==true or if a higher priority choice has
             // changed.
             if (!newValue.equals(oldValue)) {
-                log.info("Setting {}={} (was {})", key, newValue, oldValue);
+                LOGGER.info("Setting {}={} (was {})", key, newValue, oldValue);
                 try {
                     choice.setString(newValue);
                     if (changeListeners != null) {
                         changeListeners.firePropertyChange(new PropertyChangeEvent(choice, choice.getKey(), oldValue, newValue));
                     }
                 } catch (LucidException ex) {
-                    log.warn("Failure setting {}={}", key, newValue, ex);
+                    LOGGER.warn("Failure setting {}={}", key, newValue, ex);
                     Reporter.informUser(this, new ConfigException(JSOtherMsg.lookupText("Failed to set option: {0}", choice.getFullPath()), ex));
                 }
             }
@@ -285,7 +290,9 @@ public class Config implements Iterable<Choice> {
 
     /**
      * Take the data stored permanently and copy it to the local storage area,
-     * using the specified stream
+     * using the specified stream.
+     * 
+     * @param prop the set of properties to save
      */
     public void setProperties(PropertyMap prop) {
         for (String key : prop.keySet()) {
@@ -301,7 +308,9 @@ public class Config implements Iterable<Choice> {
     }
 
     /**
-     * Take the data in the local storage area and store it permanently
+     * Take the data in the local storage area and store it permanently.
+     * 
+     * @return the collection of properties
      */
     public PropertyMap getProperties() {
         PropertyMap prop  = new PropertyMap();
@@ -324,7 +333,8 @@ public class Config implements Iterable<Choice> {
      * Take the data stored permanently and copy it to the local storage area,
      * using the configured storage area
      * 
-     * @throws IOException
+     * @param uri the location of the permanent storage
+     * @throws IOException if there was a problem getting the permanent config info
      */
     public void permanentToLocal(URI uri) throws IOException {
         setProperties(NetUtil.loadProperties(uri));
@@ -333,6 +343,9 @@ public class Config implements Iterable<Choice> {
     /**
      * Take the data in the local storage area and store it permanently, using
      * the configured storage area.
+     * 
+     * @param uri the location of the permanent storage
+     * @throws IOException if there was a problem storing the permanent config info
      */
     public void localToPermanent(URI uri) throws IOException {
         NetUtil.storeProperties(getProperties(), uri, title);
@@ -340,6 +353,9 @@ public class Config implements Iterable<Choice> {
 
     /**
      * What is the Path of this key
+     * 
+     * @param key the key of the property
+     * @return the path of the key
      */
     public static String getPath(String key) {
         int lastDot = key.lastIndexOf('.');
@@ -351,7 +367,10 @@ public class Config implements Iterable<Choice> {
     }
 
     /**
-     * What is the Path of this key
+     * What is the last part of the Path of this key.
+     * 
+     * @param key the key of the property
+     * @return the part of the path after the last dot, '.'
      */
     public static String getLeaf(String key) {
         int lastDot = key.lastIndexOf('.');
@@ -377,19 +396,6 @@ public class Config implements Iterable<Choice> {
     }
 
     /**
-     * Remove a PropertyChangeListener from the listener list. This removes a
-     * PropertyChangeListener that was registered for all properties.
-     * 
-     * @param listener
-     *            The PropertyChangeListener to be removed
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        if (changeListeners != null) {
-            changeListeners.removePropertyChangeListener(listener);
-        }
-    }
-
-    /**
      * Add a PropertyChangeListener for a specific property. The listener will
      * be invoked only when a call on firePropertyChange names that specific
      * property.
@@ -408,6 +414,19 @@ public class Config implements Iterable<Choice> {
     }
 
     /**
+     * Remove a PropertyChangeListener from the listener list. This removes a
+     * PropertyChangeListener that was registered for all properties.
+     * 
+     * @param listener
+     *            The PropertyChangeListener to be removed
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (changeListeners != null) {
+            changeListeners.removePropertyChangeListener(listener);
+        }
+    }
+
+    /**
      * Remove a PropertyChangeListener for a specific property.
      * 
      * @param propertyName
@@ -415,7 +434,6 @@ public class Config implements Iterable<Choice> {
      * @param listener
      *            The PropertyChangeListener to be removed
      */
-
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (changeListeners != null) {
             changeListeners.removePropertyChangeListener(propertyName, listener);
@@ -424,7 +442,10 @@ public class Config implements Iterable<Choice> {
 
     /**
      * Add an Exception listener to the list of things wanting to know whenever
-     * we capture an Exception
+     * we capture an Exception.
+     * 
+     * @param li
+     *            The ConfigListener to be added
      */
     public void addConfigListener(ConfigListener li) {
         listeners.add(li);
@@ -433,13 +454,19 @@ public class Config implements Iterable<Choice> {
     /**
      * Remove an Exception listener from the list of things wanting to know
      * whenever we capture an Exception
+     * 
+     * @param li
+     *            The ConfigListener to be removed
      */
     public void removeConfigListener(ConfigListener li) {
         listeners.remove(li);
     }
 
     /**
-     * A Choice got added
+     * A Choice got added.
+     * 
+     * @param key the key of the choice that has been added
+     * @param model the choice that was added
      */
    protected void fireChoiceAdded(String key, Choice model) {
         ConfigEvent ev = new ConfigEvent(this, key, model);
@@ -449,7 +476,10 @@ public class Config implements Iterable<Choice> {
     }
 
     /**
-     * A Choice got added
+     * A Choice got removed.
+     * 
+     * @param key the key of the choice that has been removed
+     * @param model the choice that was removed
      */
     protected void fireChoiceRemoved(String key, Choice model) {
         ConfigEvent ev = new ConfigEvent(this, key, model);
@@ -491,5 +521,5 @@ public class Config implements Iterable<Choice> {
     /**
      * The log stream
      */
-    private static final Logger log = LoggerFactory.getLogger(Config.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 }

@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2012
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2012 - 2016
  *
  */
 package org.crosswire.jsword.versification.system;
@@ -32,8 +31,7 @@ import org.crosswire.jsword.versification.Versification;
  * The Versifications class manages the creation of Versifications as needed.
  * It delays the construction of the Versification until getVersification(String name) is called.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class Versifications {
@@ -100,17 +98,23 @@ public final class Versifications {
     }
 
     private Versification fluff(String name) {
-        //keep KJV at the top as it is the most common
+        // Keep KJV at the top as it is the most common
         if (name == null || SystemKJV.V11N_NAME.equals(name)) {
             return new SystemKJV();
         }
 
         //then in alphabetical order, to ease the developer checking we have them all
+        if (SystemCalvin.V11N_NAME.equals(name)) {
+            return new SystemCalvin();
+        }
         if (SystemCatholic.V11N_NAME.equals(name)) {
             return new SystemCatholic();
         }
         if (SystemCatholic2.V11N_NAME.equals(name)) {
             return new SystemCatholic2();
+        }
+        if (SystemDarbyFR.V11N_NAME.equals(name)) {
+            return new SystemDarbyFR();
         }
         if (SystemGerman.V11N_NAME.equals(name)) {
             return new SystemGerman();
@@ -124,6 +128,9 @@ public final class Versifications {
         if (SystemLuther.V11N_NAME.equals(name)) {
             return new SystemLuther();
         }
+        if (SystemLXX.V11N_NAME.equals(name)) {
+            return new SystemLXX();
+        }
         if (SystemMT.V11N_NAME.equals(name)) {
             return new SystemMT();
         }
@@ -132,6 +139,12 @@ public final class Versifications {
         }
         if (SystemNRSVA.V11N_NAME.equals(name)) {
             return new SystemNRSVA();
+        }
+        if (SystemOrthodox.V11N_NAME.equals(name)) {
+            return new SystemOrthodox();
+        }
+        if (SystemSegond.V11N_NAME.equals(name)) {
+            return new SystemSegond();
         }
         if (SystemSynodal.V11N_NAME.equals(name)) {
             return new SystemSynodal();
@@ -171,22 +184,27 @@ public final class Versifications {
     public int size() {
         return known.size();
     }
-    
+
     /**
      * This class is a singleton, enforced by a private constructor.
      */
     private Versifications() {
         known = new HashSet<String>();
+        known.add(SystemCalvin.V11N_NAME);
         known.add(SystemCatholic.V11N_NAME);
         known.add(SystemCatholic2.V11N_NAME);
+        known.add(SystemDarbyFR.V11N_NAME);
         known.add(SystemGerman.V11N_NAME);
         known.add(SystemKJV.V11N_NAME);
         known.add(SystemKJVA.V11N_NAME);
         known.add(SystemLeningrad.V11N_NAME);
         known.add(SystemLuther.V11N_NAME);
+        known.add(SystemLXX.V11N_NAME);
         known.add(SystemMT.V11N_NAME);
         known.add(SystemNRSV.V11N_NAME);
         known.add(SystemNRSVA.V11N_NAME);
+        known.add(SystemOrthodox.V11N_NAME);
+        known.add(SystemSegond.V11N_NAME);
         known.add(SystemSynodal.V11N_NAME);
         known.add(SystemSynodalProt.V11N_NAME);
         known.add(SystemVulg.V11N_NAME);

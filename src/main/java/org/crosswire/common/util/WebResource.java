@@ -1,21 +1,20 @@
 /**
  * Distribution License:
- * BibleDesktop is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License, version 2.1 as published by
- * the Free Software Foundation. This program is distributed in the hope
- * that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * JSword is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License, version 2.1 or later
+ * as published by the Free Software Foundation. This program is distributed
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -50,8 +49,7 @@ import org.crosswire.jsword.JSMsg;
  * default timeout is 750 milliseconds.
  * 
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class WebResource {
@@ -238,7 +236,7 @@ public class WebResource {
      *            the URI of the destination, typically a file:///.
      * @param meter
      *            the job on which to report progress
-     * @throws LucidException
+     * @throws LucidException when an error is encountered
      */
     public void copy(URI dest, Progress meter) throws LucidException  {
         InputStream in = null;
@@ -296,8 +294,8 @@ public class WebResource {
     /**
      * Copy this WebResource to the destination.
      * 
-     * @param dest
-     * @throws LucidException
+     * @param dest the destination URI
+     * @throws LucidException when an error is encountered
      */
     public void copy(URI dest) throws LucidException {
         copy(dest, null);
@@ -313,10 +311,10 @@ public class WebResource {
     private int getHeaderAsInt(HttpResponse response, String field) {
         Header header = response.getFirstHeader(field);
         // If there is no matching header in the message null is returned.
-        if (header==null) {
+        if (header == null) {
             return 0;
         }
-        
+
         String value = header.getValue();
         try {
             return Integer.parseInt(value);

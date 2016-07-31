@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.filter.thml;
@@ -40,9 +39,8 @@ import org.xml.sax.Attributes;
  * to it. As a simplifying assumption, we will assume that the text element is
  * not contained by anything except perhaps by a w element.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class SyncTag extends AbstractTag {
     /* (non-Javadoc)
@@ -111,6 +109,35 @@ public class SyncTag extends AbstractTag {
                     buf.append(OSISUtil.MORPH_ROBINSONS);
                     buf.append(value);
                     wEle.setAttribute(OSISUtil.ATTRIBUTE_W_MORPH, buf.toString());
+                }
+            }
+            return null;
+        }
+
+        if ("lemma".equals(type)) {
+            List<Content> siblings = ele.getContent();
+            int size = siblings.size();
+            if (size == 0) {
+                return null;
+            }
+            Content lastEle = siblings.get(size - 1);
+            if (lastEle instanceof Text) {
+                Element w = OSISUtil.factory().createW();
+                w.setAttribute(OSISUtil.ATTRIBUTE_W_LEMMA, OSISUtil.LEMMA_MISC + value);
+                siblings.set(size - 1, w);
+                w.addContent(lastEle);
+            } else if (lastEle instanceof Element) {
+                Element wEle = (Element) lastEle;
+                if (wEle.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
+                    StringBuilder buf = new StringBuilder();
+                    String lemmaAttr = wEle.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
+                    if (lemmaAttr != null) {
+                        buf.append(lemmaAttr);
+                        buf.append(' ');
+                    }
+                    buf.append(OSISUtil.LEMMA_MISC);
+                    buf.append(value);
+                    wEle.setAttribute(OSISUtil.ATTRIBUTE_W_LEMMA, buf.toString());
                 }
             }
             return null;

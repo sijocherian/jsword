@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.xml;
@@ -25,8 +24,7 @@ package org.crosswire.common.xml;
  * Wraps an XML Feature. The "known" set of XML Features is found in
  * XMLFeatureSet.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum XMLFeature {
@@ -66,10 +64,10 @@ public enum XMLFeature {
     /**
      * Construct a feature for xml, setting the initial state
      * 
-     * @param control
-     * @param initialState
+     * @param control the identifier for an XML feature
+     * @param initialState whether that feature defaults to on or off
      */
-    private XMLFeature(String control, boolean initialState) {
+    XMLFeature(String control, boolean initialState) {
         this.control = control;
         this.state = initialState;
     }
@@ -77,9 +75,9 @@ public enum XMLFeature {
     /**
      * Construct a feature for xml, setting the initial state set to false.
      * 
-     * @param control
+     * @param control the identifier for an XML feature that is initially off
      */
-    private XMLFeature(String control) {
+    XMLFeature(String control) {
         this(control, false);
     }
 
@@ -101,6 +99,9 @@ public enum XMLFeature {
 
     /**
      * Lookup method to convert from a String
+     * 
+     * @param name the name of the control feature
+     * @return the XML Feature
      */
     public static XMLFeature fromString(String name) {
         for (XMLFeature o : XMLFeature.values()) {
@@ -113,6 +114,9 @@ public enum XMLFeature {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Enum#toString()
+     */
     @Override
     public String toString() {
         return (state ? "on  " : "off ") + control;

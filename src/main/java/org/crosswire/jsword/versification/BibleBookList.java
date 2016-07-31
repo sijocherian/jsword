@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2012
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2012 - 2016
  *
  */
 package org.crosswire.jsword.versification;
@@ -28,8 +27,7 @@ import java.util.NoSuchElementException;
  * A BibleBookList is an ordered list of one or more BibleBooks.
  * Typically, a BibleBookList is a member of a Versification.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 /* pkg protected */ class BibleBookList implements Iterable<BibleBook>, Serializable {
@@ -37,7 +35,7 @@ import java.util.NoSuchElementException;
      * Create an ordered BibleBookList from the input.
      * @param books
      */
-    public BibleBookList(BibleBook[] books) {
+    BibleBookList(BibleBook[] books) {
         this.books = books.clone();
         initialize();
     }
@@ -59,7 +57,7 @@ import java.util.NoSuchElementException;
      * then the return value of this routine is -1.
      *
      * @param book
-     * return the ordinal value of the book or -1 if not present
+     * @return the ordinal value of the book or -1 if not present
      */
     public int getOrdinal(BibleBook book) {
         return bookMap[book.ordinal()];

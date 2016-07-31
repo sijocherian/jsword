@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -25,9 +24,8 @@ package org.crosswire.jsword.book;
 /**
  * An Enumeration of the possible Features a Book may have.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public enum FeatureType {
     /**
@@ -95,7 +93,7 @@ public enum FeatureType {
      * @param name
      *            The name of the FeatureType
      */
-    private FeatureType(String name) {
+    FeatureType(String name) {
         this(name, "");
     }
 
@@ -105,13 +103,16 @@ public enum FeatureType {
      * @param alias
      *            The alias of the FeatureType
      */
-    private FeatureType(String name, String alias) {
+    FeatureType(String name, String alias) {
         this.name = name;
         this.alias = alias;
     }
 
     /**
      * Lookup method to convert from a String
+     * 
+     * @param name the name of a FeatureType
+     * @return the matching FeatureType
      */
     public static FeatureType fromString(String name) {
         for (FeatureType v : values()) {

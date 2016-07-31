@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.filter.gbf;
@@ -26,6 +25,7 @@ import java.util.Map;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.filter.gbf.GBFTags.BoldStartTag;
 import org.crosswire.jsword.book.filter.gbf.GBFTags.CrossRefStartTag;
+import org.crosswire.jsword.book.filter.gbf.GBFTags.BookTitleStartTag;
 import org.crosswire.jsword.book.filter.gbf.GBFTags.DefaultEndTag;
 import org.crosswire.jsword.book.filter.gbf.GBFTags.EOLTag;
 import org.crosswire.jsword.book.filter.gbf.GBFTags.FootnoteEndTag;
@@ -56,9 +56,8 @@ import org.slf4j.LoggerFactory;
  * found is: <a
  * href="http://ebible.org/bible/gbf.htm">http://ebible.org/bible/gbf.htm</a>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class GBFTagBuilders {
@@ -69,11 +68,18 @@ public final class GBFTagBuilders {
     }
 
     /**
-     * @param name
+     * @param book the book
+     * @param key the key
+     * @param name the tag name
      * @return return a GBF Tag for the given tag name
      */
     public static Tag getTag(Book book, Key key, String name) {
         Tag tag = null;
+        if (name.startsWith("W") && (name.contains("-") || name.contains(":")) && name.matches("WT?[GH] ?[0-9]+[-:][0-9abc-]+")) {
+            // these tags show verse boundaries in different versification;
+            // ignore them instead of parsing them as Strongs / Morphology tags
+            return null;
+        }
         int length = name.length();
         if (length > 0) {
             // Only the first two letters of the tag are indicative of the tag
@@ -81,7 +87,7 @@ public final class GBFTagBuilders {
             TagBuilder builder = null;
             if (length == 2) {
                 builder = BUILDERS.get(name);
-            } else {
+            } else if (length > 2) {
                 builder = BUILDERS.get(name.substring(0, 2));
             }
 
@@ -93,7 +99,6 @@ public final class GBFTagBuilders {
                 // I'm not confident enough that we handle all the GBF tags
                 // that I will blame the book instead of the program
                 log.warn("In {}({}) ignoring tag of <{}>", book.getInitials(), key.getName(), name);
-                // DataPolice.report("Ignoring tag of <" + name + ">");
             }
         }
         return tag;
@@ -115,6 +120,15 @@ public final class GBFTagBuilders {
             return new BoldStartTag(name);
         }
     }
+
+    /**
+    *
+    */
+   static final class BookTitleStartTagBuilder implements TagBuilder {
+       public Tag createTag(String name) {
+           return new BookTitleStartTag(name);
+       }
+   }
 
     /**
      *
@@ -345,6 +359,9 @@ public final class GBFTagBuilders {
         BUILDERS.put("TH", new TitleStartTagBuilder());
         BUILDERS.put("Th", defaultEndTagBuilder);
 
+        BUILDERS.put("TT", new BookTitleStartTagBuilder());
+        BUILDERS.put("Tt", defaultEndTagBuilder);
+
         BUILDERS.put("BA", ignoreTagBuilder);
         BUILDERS.put("BC", ignoreTagBuilder);
         BUILDERS.put("BI", ignoreTagBuilder);
@@ -353,6 +370,7 @@ public final class GBFTagBuilders {
         BUILDERS.put("BP", ignoreTagBuilder);
 
         BUILDERS.put("JR", new JustifyRightTagBuilder());
+        BUILDERS.put("JC", ignoreTagBuilder);
         BUILDERS.put("JL", ignoreTagBuilder);
 
         BUILDERS.put("FO", new OTQuoteStartTagBuilder());

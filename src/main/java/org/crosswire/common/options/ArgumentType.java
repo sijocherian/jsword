@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.common.options;
@@ -24,8 +23,7 @@ package org.crosswire.common.options;
  * An ArgumentType indicates whether and/or how an Option is followed by an
  * argument.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum ArgumentType {
@@ -46,14 +44,17 @@ public enum ArgumentType {
 
     /**
      * @param name
-     *            The name of the DataType
+     *            The name of the ArgumentType
      */
-    private ArgumentType(String name) {
+    ArgumentType(String name) {
         this.name = name;
     }
 
     /**
-     * Lookup method to convert from a String
+     * Lookup method to find an ArgumentType by name
+     * 
+     * @param name the name of the ArgumentType
+     * @return the ArgumentType or null
      */
     public static ArgumentType fromString(String name) {
         for (ArgumentType v : values()) {

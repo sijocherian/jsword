@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2013 - 2016
  *
  */
 package org.crosswire.jsword.book.sword.state;
@@ -30,7 +29,7 @@ import org.crosswire.common.util.IOUtil;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.sword.SwordBookMetaData;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.SwordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +40,7 @@ import org.slf4j.LoggerFactory;
  * The caller is required to close to correctly free resources and avoid File
  * pointer leaks.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class ZLDBackendState extends RawLDBackendState {
@@ -55,7 +53,7 @@ public class ZLDBackendState extends RawLDBackendState {
      * 
      * @param bookMetaData the appropriate metadata for the book
      */
-     ZLDBackendState(SwordBookMetaData bookMetaData) throws BookException {
+     ZLDBackendState(BookMetaData bookMetaData) throws BookException {
         super(bookMetaData);
         zdxFile = null;
         zdtFile = null;
@@ -98,7 +96,7 @@ public class ZLDBackendState extends RawLDBackendState {
             IOUtil.close(zdxRaf);
             IOUtil.close(zdtRaf);
 
-            log.error("failed to open files", ex);
+            LOGGER.error("failed to open files", ex);
             zdxRaf = null;
             zdtRaf = null;
             return;
@@ -196,5 +194,5 @@ public class ZLDBackendState extends RawLDBackendState {
     /**
      * The log stream
      */
-    private static final Logger log = LoggerFactory.getLogger(ZLDBackendState.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZLDBackendState.class);
 }

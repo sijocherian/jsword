@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.jsword.index.lucene;
@@ -35,17 +34,20 @@ import org.crosswire.jsword.versification.Versification;
 /**
  * A simple collector of verses that stores the verses in a Key.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class VerseCollector extends Collector {
 
     /**
      * Create a collector for the searcher that populates results.
+     * @param v11n
+     *            the versification to which referenced pertains
+     * @param searcher 
+     * @param results 
      */
-    public VerseCollector(Versification refSystem, Searcher searcher, Key results) {
-        this.v11n = refSystem;
+    public VerseCollector(Versification v11n, Searcher searcher, Key results) {
+        this.v11n = v11n;
         this.searcher = searcher;
         this.results = results;
     }

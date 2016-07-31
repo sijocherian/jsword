@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -31,7 +30,7 @@ import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.JSOtherMsg;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.basic.AbstractBook;
-import org.crosswire.jsword.book.filter.Filter;
+import org.crosswire.jsword.book.filter.SourceFilter;
 import org.crosswire.jsword.book.sword.processing.RawTextToXmlProcessor;
 import org.crosswire.jsword.passage.DefaultKeyList;
 import org.crosswire.jsword.passage.Key;
@@ -43,15 +42,14 @@ import org.jdom2.Content;
 /**
  * A Sword version of a generic book.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class SwordGenBook extends AbstractBook {
     /**
      * Construct an SwordGenBook given the BookMetaData and the AbstractBackend.
      * 
-     * @param bmd the metadata that describes the book
+     * @param sbmd the metadata that describes the book
      * @param backend the means by which the resource is accessed
      */
     protected SwordGenBook(SwordBookMetaData sbmd, Backend backend) {
@@ -79,7 +77,7 @@ public class SwordGenBook extends AbstractBook {
 
         map = new HashMap<String, Key>();
         for (Key key : set) {
-            map.put(key.getName(), key);
+            map.put(key.getOsisRef(), key);
         }
 
         global = new ReadOnlyKeyList(set, false);
@@ -105,9 +103,9 @@ public class SwordGenBook extends AbstractBook {
     }
 
     /* (non-Javadoc)
-     * @see org.crosswire.jsword.book.Book#getOsisIterator(org.crosswire.jsword.passage.Key, boolean)
+     * @see org.crosswire.jsword.book.Book#getOsisIterator(org.crosswire.jsword.passage.Key, boolean, boolean)
      */
-    public Iterator<Content> getOsisIterator(Key key, boolean allowEmpty) throws BookException {
+    public Iterator<Content> getOsisIterator(Key key, final boolean allowEmpty, final boolean allowGenTitle) throws BookException {
         checkActive();
 
         assert key != null;
@@ -273,6 +271,6 @@ public class SwordGenBook extends AbstractBook {
     /**
      * The filter to use to convert to OSIS.
      */
-    protected Filter filter;
+    protected SourceFilter filter;
 
 }

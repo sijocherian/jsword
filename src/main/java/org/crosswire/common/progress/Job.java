@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.progress;
@@ -38,9 +37,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A Generic method of keeping track of Threads and monitoring their progress.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class Job implements Progress {
@@ -48,6 +46,7 @@ public final class Job implements Progress {
      * Create a new Job. This will automatically fire a workProgressed event to
      * all WorkListeners, with the work property of this job set to 0.
      * 
+     * @param jobID the job identifier
      * @param jobName
      *            Short description of this job
      * @param worker
@@ -306,7 +305,7 @@ public final class Job implements Progress {
         }
     }
 
-    /* (non-Javadoc)
+   /* (non-Javadoc)
      * @see org.crosswire.common.progress.Progress#isFinished()
      */
     public boolean isFinished() {
@@ -333,6 +332,8 @@ public final class Job implements Progress {
 
     /**
      * Add a listener to the list
+     * 
+     * @param li the interested listener
      */
     public synchronized void addWorkListener(WorkListener li) {
         List<WorkListener> temp = new ArrayList<WorkListener>();
@@ -346,6 +347,8 @@ public final class Job implements Progress {
 
     /**
      * Remote a listener from the list
+     * 
+     * @param li the disinterested listener
      */
     public synchronized void removeWorkListener(WorkListener li) {
         if (listeners.contains(li)) {
@@ -380,6 +383,7 @@ public final class Job implements Progress {
     /**
      * Get estimated the percent progress
      * 
+     * @param now the current point in progress
      * @return true if there is an update to progress.
      */
     protected synchronized boolean updateProgress(long now) {
@@ -399,6 +403,8 @@ public final class Job implements Progress {
 
     /**
      * Load the predictive timings if any
+     * 
+     * @return the length of progress
      */
     private int loadPredictions() {
         int maxAge = UNKNOWN;
@@ -543,6 +549,7 @@ public final class Job implements Progress {
 
     /**
      * The Job ID associated with this job
+     * @return the job ID
      */
     public String getJobID() {
         return jobID;

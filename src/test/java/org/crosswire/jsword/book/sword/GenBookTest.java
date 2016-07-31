@@ -8,33 +8,29 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2012 - 2014
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2012 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * A Raw File format that allows for each verse to have it's own storage.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author mbergmann
  * @author DM Smith
  */
@@ -47,27 +43,22 @@ public class GenBookTest {
             Key key = null;
             try {
                 key = book.getKey("THE FIRST STAGE");
-            } catch (NoSuchKeyException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            } catch (NoSuchKeyException ex) {
+                Assert.fail();
             }
             if (key != null) {
-                try {
-                    assertEquals("PART_II.THE_FIRST_STAGE", key.getOsisID());
-                } catch(RuntimeException e) {
-                   fail("Could not get the osisID for a GenBook key.");
-                }
+                Assert.assertEquals("PART II/THE FIRST STAGE", key.getOsisID());
             }
         }
     }
-    
+
     @Test
     public void testCount() {
         Book book = Books.installed().getBook("Pilgrim");
         if (book != null) {
             Key globalKeyList = book.getGlobalKeyList();
-            assertEquals("Incorrect number of keys in master list", 29, globalKeyList.getCardinality());
-            assertEquals("Incorrect number of top level keys", 6, globalKeyList.getChildCount());
+            Assert.assertEquals("Incorrect number of keys in master list", 29, globalKeyList.getCardinality());
+            Assert.assertEquals("Incorrect number of top level keys", 6, globalKeyList.getChildCount());
         }
     }
 
@@ -79,9 +70,9 @@ public class GenBookTest {
             try {
                 book.getRawText(key);
             } catch (NullPointerException e) {
-                fail("test for bad key should not have thrown an NPE.");
+                Assert.fail("test for bad key should not have thrown an NPE.");
             } catch (BookException e) {
-                assertEquals("testing for a bad key", "No entry for '' in Pilgrim.", e.getMessage());
+                Assert.assertEquals("testing for a bad key", "No entry for '' in Pilgrim.", e.getMessage());
             }
         }
     }

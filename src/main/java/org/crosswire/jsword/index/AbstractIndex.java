@@ -8,16 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
- *
- * ID: $Id:AbstractIndex.java 983 2006-01-23 14:10:49 -0500 (Mon, 23 Jan 2006) dmsmith $
+ * © CrossWire Bible Society, 2005 - 2016
  */
 package org.crosswire.jsword.index;
 
@@ -27,8 +24,7 @@ import org.crosswire.jsword.index.search.SearchModifier;
  * A simple implementation of an Index that provides the set/get for
  * SearchModifier.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 

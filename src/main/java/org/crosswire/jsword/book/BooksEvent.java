@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -27,14 +26,14 @@ import java.util.EventObject;
 /**
  * A BooksEvent is fired whenever a Bible is added or removed from the system.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class BooksEvent extends EventObject {
     /**
      * Basic constructor
      * 
+     * @param source the source of this BookEvent
      * @param book
      *            The book of the changed Bible, or null if there is more than
      *            one change.
@@ -59,6 +58,8 @@ public class BooksEvent extends EventObject {
 
     /**
      * Is this an addition event?
+     * 
+     * @return true if the book is being added
      */
     public boolean isAddition() {
         return added;
@@ -67,9 +68,9 @@ public class BooksEvent extends EventObject {
     /**
      * Serialization support.
      * 
-     * @param is
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param is the input stream
+     * @throws IOException if an I/O error occurred
+     * @throws ClassNotFoundException this class cannot be recreated.
      */
     private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
         // Broken but we don't serialize events

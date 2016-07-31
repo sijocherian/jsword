@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.history;
@@ -31,8 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Maintains a navigable history of objects. This maintains a dated list of
  * objects and a current navigation list.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class History {
@@ -55,6 +53,7 @@ public class History {
      *            (or lower) will put everything in the forward list. Indexes
      *            beyond the end of the list will put everything in the back
      *            list.
+     * @return the specified item in history
      */
     public Object select(int index) {
         int i = index;
@@ -212,7 +211,7 @@ public class History {
     /**
      * Note that this object has been seen at this time.
      * 
-     * @param obj
+     * @param obj the object that has been seen
      */
     private void visit(Object obj) {
         history.put(obj, Long.valueOf(System.currentTimeMillis()));

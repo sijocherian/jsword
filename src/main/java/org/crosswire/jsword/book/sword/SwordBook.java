@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -24,13 +23,16 @@ import java.util.List;
 
 import org.crosswire.jsword.JSOtherMsg;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.book.basic.AbstractPassageBook;
-import org.crosswire.jsword.book.filter.Filter;
+import org.crosswire.jsword.book.filter.SourceFilter;
 import org.crosswire.jsword.book.sword.processing.RawTextToXmlProcessor;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
+import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
+import org.crosswire.jsword.passage.VerseKey;
 import org.crosswire.jsword.versification.Versification;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
@@ -41,15 +43,14 @@ import org.slf4j.LoggerFactory;
 /**
  * SwordBook is a base class for all verse based Sword type books.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class SwordBook extends AbstractPassageBook {
     /**
      * Construct an SwordBook given the BookMetaData and the AbstractBackend.
      * 
-     * @param bmd the metadata that describes the book
+     * @param sbmd the metadata that describes the book
      * @param backend the means by which the resource is accessed
      */
     public SwordBook(SwordBookMetaData sbmd, Backend<?> backend) {
@@ -74,7 +75,7 @@ public class SwordBook extends AbstractPassageBook {
                 // fail silently, operation not supported by the backend
                 log.debug(ex.getMessage());
             } catch (BookException ex) {
-                // failing silently, as previous behaviour was to attempt to
+                // failing silently, as previous behavior was to attempt to
                 // return as much as we can using the slower method
                 log.debug(ex.getMessage());
             }
@@ -92,6 +93,43 @@ public class SwordBook extends AbstractPassageBook {
         }
 
         return global;
+    }
+
+    /* (non-Javadoc)
+     * @see org.crosswire.jsword.book.basic.AbstractBook#getScope()
+     */
+    @Override
+    public Key getScope() {
+        SwordBookMetaData sbmd = (SwordBookMetaData) getBookMetaData();
+        //if the book type doesn't have verses, then leave it.
+        if (sbmd.getProperty(BookMetaData.KEY_VERSIFICATION) == null) {
+            //then we're not looking at a versified book
+            return null;
+        }
+
+        Object keyString = sbmd.getProperty(BookMetaData.KEY_SCOPE);
+
+        if (keyString != null) {
+            try {
+                return getKey((String) keyString);
+            } catch (NoSuchKeyException ex) {
+                //the scope defined is not correct
+                log.error("Unable to parse scope from book", ex);
+                return null;
+            }
+        }
+
+        //need to calculate the scope
+        //now comes the expensive part
+        Key bookKeys = getGlobalKeyList();
+
+        //this is practically impossible, but cater for it just in case.
+        if (!(bookKeys instanceof VerseKey)) {
+            log.error("Global key list isn't a verse key. A very expensive no-op has just occurred.");
+            return null;
+        }
+
+        return bookKeys;
     }
 
     /* (non-Javadoc)
@@ -268,14 +306,14 @@ public class SwordBook extends AbstractPassageBook {
      * @see org.crosswire.jsword.book.basic.AbstractPassageBook#getFilter()
      */
     @Override
-    protected Filter getFilter() {
+    protected SourceFilter getFilter() {
         return filter;
     }
 
     /**
      * The filter to use to convert to OSIS.
      */
-    private Filter filter;
+    private SourceFilter filter;
 
     /**
      * A cached representation of the global key list.

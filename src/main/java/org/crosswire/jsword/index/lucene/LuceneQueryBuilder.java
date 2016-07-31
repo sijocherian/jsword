@@ -8,16 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
- *
- * ID: $Id:LuceneQueryBuilder.java 984 2006-01-23 14:18:33 -0500 (Mon, 23 Jan 2006) dmsmith $
+ * © CrossWire Bible Society, 2005 - 2016
  */
 package org.crosswire.jsword.index.lucene;
 
@@ -40,8 +37,7 @@ import org.crosswire.jsword.index.query.RangeQuery;
  * blur specifier is either ~ or ~n, where ~ means adjacent verses, but ~n means
  * to blur by n verses.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class LuceneQueryBuilder implements QueryBuilder {
@@ -68,7 +64,7 @@ public final class LuceneQueryBuilder implements QueryBuilder {
         if (rangeMatcher.find()) {
             rangeModifier = rangeMatcher.group(1);
             range = new RangeQuery(rangeMatcher.group(2));
-            sought = sought.substring(rangeMatcher.end());
+            sought = sought.replace(rangeMatcher.group(), " ");
         }
 
         // Look for a blur ~n
@@ -104,7 +100,7 @@ public final class LuceneQueryBuilder implements QueryBuilder {
      * leading [] (but not containing a [ or ]), with a + or - optional prefix,
      * perhaps surrounded by whitespace.
      */
-    private static final Pattern RANGE_PATTERN = Pattern.compile("^\\s*([-+]?)\\[([^\\[\\]]+)\\]\\s*");
+    private static final Pattern RANGE_PATTERN = Pattern.compile("\\s*([-+]?)\\[([^\\[\\]]+)\\]\\s*");
 
     /**
      * The pattern of a blur. A '~', optionally followed by a number,

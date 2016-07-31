@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2013 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -23,12 +22,11 @@ package org.crosswire.jsword.passage;
 import org.crosswire.jsword.versification.Versification;
 
 /**
- * A Versified indicates that a Key has a Versification reference system.
+ * A VerseKey indicates that a Key has a Versification reference system.
  * 
  * @param <T> The type of VerseKey that reversify returns.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public interface VerseKey<T extends VerseKey> extends Key {
@@ -49,7 +47,7 @@ public interface VerseKey<T extends VerseKey> extends Key {
      * verses are in both Versifications. You have been warned.
      * </p>
      * 
-     * 
+     * @param newVersification 
      * @return this VerseKey Versification.
      */
     T reversify(Versification newVersification);

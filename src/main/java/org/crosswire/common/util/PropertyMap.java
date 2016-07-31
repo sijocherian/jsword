@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -29,12 +28,11 @@ import java.util.Properties;
 
 
 /**
- * A PropertyMap is a Map<String,String> sitting over top a Property file.
- * As such it must be defined in the same way as a java.lang.Properties expects.
+ * A PropertyMap is a Map&lt;String,String&gt; sitting over top a Property file.
+ * As such it must be defined in the same way as a java.util.Properties expects.
  *
- * @see java.lang.Properties
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see java.util.Properties
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class PropertyMap extends LinkedHashMap<String, String> {
@@ -62,8 +60,7 @@ public class PropertyMap extends LinkedHashMap<String, String> {
      *
      * @param   key   the lookup key.
      * @return  the value in this property list with the specified key value.
-     * @see     java.lang.Properties#setProperty
-     * @see     #defaults
+     * @see     java.util.Properties#setProperty
      */
     public String get(String key) {
         String value = super.get(key);
@@ -80,8 +77,7 @@ public class PropertyMap extends LinkedHashMap<String, String> {
      * @param   defaultValue   a default value.
      *
      * @return  the value in this property list with the specified key value.
-     * @see     java.lang.Properties#setProperty
-     * @see     #defaults
+     * @see     java.util.Properties#setProperty
      */
     public String get(String key, String defaultValue) {
         String value = get(key);
@@ -92,7 +88,7 @@ public class PropertyMap extends LinkedHashMap<String, String> {
      * Reads a property list (key and element pairs) from the input
      * byte stream. The input stream is in a simple line-oriented
      * format as specified in
-     * {@link java.lang.Properties#load(java.io.InputStream) load(InputStream)} and is assumed to use
+     * {@link java.util.Properties#load(java.io.InputStream) load(InputStream)} and is assumed to use
      * the ISO 8859-1 character encoding; that is each byte is one Latin1
      * character. Characters not in Latin1, and certain special characters,
      * are represented in keys and elements using
@@ -130,7 +126,7 @@ public class PropertyMap extends LinkedHashMap<String, String> {
      * <p>
      * This method outputs the comments, properties keys and values in 
      * the same format as specified in
-     * {@link java.lang.Properties#store(java.io.OutputStream, java.lang.String) store(Writer)},
+     * {@link java.util.Properties#store(java.io.OutputStream, java.lang.String) store(Writer)},
      * <p>
      * After the entries have been written, the output stream is flushed.  
      * The output stream remains open after this method returns.

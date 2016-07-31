@@ -8,28 +8,26 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.config;
 
 import java.io.File;
 
-import org.crosswire.common.util.Convert;
+import org.crosswire.common.util.StringUtil;
 
 /**
  * A class to convert between strings and objects of a type.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class PathChoice extends AbstractReflectedChoice {
     /*
@@ -56,7 +54,7 @@ public class PathChoice extends AbstractReflectedChoice {
             names[i] = paths[i].getAbsolutePath();
         }
 
-        return Convert.stringArray2String(names, File.pathSeparator);
+        return StringUtil.join(names, File.pathSeparator);
     }
 
     /*
@@ -68,7 +66,7 @@ public class PathChoice extends AbstractReflectedChoice {
      */
     @Override
     public Object convertToObject(String orig) {
-        String[] names = Convert.string2StringArray(orig, File.pathSeparator);
+        String[] names = StringUtil.split(orig, File.pathSeparator);
         File[] paths = new File[names.length];
         for (int i = 0; i < names.length; i++) {
             paths[i] = new File(names[i]);

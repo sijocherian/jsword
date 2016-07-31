@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.jsword.index.lucene;
@@ -25,6 +24,7 @@ import java.io.IOException;
 import org.crosswire.common.util.PropertyMap;
 import org.crosswire.common.util.ResourceUtil;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.index.IndexManagerFactory;
@@ -35,14 +35,18 @@ import org.slf4j.LoggerFactory;
  * A singleton that Reads and Maintains IndexMetadata from properties file All
  * version number in the properties file must be float.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Sijo Cherian [sijocherian at yahoo dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Sijo Cherian
  */
 public final class IndexMetadata {
 
-    /* latest version on top*/
+    /** latest version on top */
     public static final float INDEX_VERSION_1_2 = 1.2f;
+    /**
+     * A prior version.
+     * 
+     * @deprecated do not use
+     */
     @Deprecated
     public static final float INDEX_VERSION_1_1 = 1.1f;
 
@@ -50,8 +54,12 @@ public final class IndexMetadata {
     public static final String LUCENE_VERSION = "Lucene.Version";
 
     public static final String PREFIX_LATEST_INDEX_VERSION_BOOK_OVERRIDE = "Latest.Index.Version.Book.";
+    /**
+     * @deprecated do not use
+     */
     @Deprecated
     public static final String INDEX_VERSION = "Installed.Index.Version";
+
     /**
      * All access to IndexMetadata is through this single instance.
      * 
@@ -63,43 +71,50 @@ public final class IndexMetadata {
 
     /**
      * default Installed IndexVersion
-    @deprecated see InstalledIndex.java
+     * 
+     * @return the index version
+     * @deprecated see InstalledIndex.java
      */
+    @Deprecated
     public float getInstalledIndexVersion() {
-        String value = props.get(INDEX_VERSION, "1.1"); //todo At some point default should be 1.2
+        String value = props.get(INDEX_VERSION, "1.1"); // todo At some point
+                                                        // default should be 1.2
         return Float.parseFloat(value);
     }
 
-
-    //Default Latest IndexVersion : Default version number of Latest indexing schema: PerBook index version must be equal or greater than this
+    // Default Latest IndexVersion : Default version number of Latest indexing
+    // schema: PerBook index version must be equal or greater than this
     public float getLatestIndexVersion() {
         String value = props.get(LATEST_INDEX_VERSION, "1.2");
         return Float.parseFloat(value);
     }
+
+    public float getLatestIndexVersion(Book b) {
+        if (b == null) {
+            return getLatestIndexVersion();
+        }
+
+        String value = props.get(PREFIX_LATEST_INDEX_VERSION_BOOK_OVERRIDE + IndexMetadata.getBookIdentifierPropSuffix(b.getBookMetaData()),
+                props.get(LATEST_INDEX_VERSION));
+        return Float.parseFloat(value);
+    }
+
     public String getLatestIndexVersionStr() {
         String value = props.get(LATEST_INDEX_VERSION, "1.2");
         return value;
     }
 
-    public float getLatestIndexVersion(Book b) {
-        if(b==null) return getLatestIndexVersion();
-
-        String value = props.get(PREFIX_LATEST_INDEX_VERSION_BOOK_OVERRIDE+IndexMetadata.getBookIdentifierPropSuffix(b.getBookMetaData()),
-                        props.get(LATEST_INDEX_VERSION) );
-        return Float.parseFloat(value);
-    }
-
-
-    //used in property keys e.g.  Installed.Index.Version.Book.ESV[1.0.1]
+    // used in property keys e.g. Installed.Index.Version.Book.ESV[1.0.1]
     public static String getBookIdentifierPropSuffix(BookMetaData meta) {
         String moduleVer = null;
-        if(meta.getProperty("Version") !=null)
-            moduleVer = '['+ ((org.crosswire.common.util.Version)meta.getProperty("Version")).toString()+']';
+        if (meta.getProperty("Version") != null) {
+            moduleVer = '[' + meta.getProperty("Version") + ']';
+        }
 
-        return
-                meta.getInitials()+ moduleVer;
+        return meta.getInitials() + moduleVer;
 
     }
+
     public float getLuceneVersion() {
         return Float.parseFloat(props.get(LUCENE_VERSION));
     }
@@ -112,30 +127,30 @@ public final class IndexMetadata {
         }
     }
 
-    //a index status summary in English
-    public static String generateInstalledBooksIndexVersionReport() {
-        StringBuilder toReturn= new StringBuilder();
-        int installedBookCount=0, searchEnabledBookCount=0, reindexMandatoryBookCount=0;
+    // a index status summary in English
+    public static String generateInstalledBooksIndexVersionReport(BookFilter filter) {
+        StringBuilder toReturn = new StringBuilder();
+        int installedBookCount = 0;
+        int searchEnabledBookCount = 0;
+        int reindexMandatoryBookCount = 0;
         LuceneIndexManager indexManager = (LuceneIndexManager) IndexManagerFactory.getIndexManager();
         Books myBooks = Books.installed();
         toReturn.append("InstalledBooks:");
-        for(Book insBook: myBooks.getBooks()) {
+        for (Book insBook : myBooks.getBooks(filter)) {
             installedBookCount++;
             toReturn.append("\n\t").append(insBook.getBookMetaData().getInitials()).append(": ");
-            if(indexManager.isIndexed( insBook)) {
+            if (indexManager.isIndexed(insBook)) {
                 searchEnabledBookCount++;
                 toReturn.append("search enabled, ");
-                if(indexManager.needsReindexing( insBook)) {
+                if (indexManager.needsReindexing(insBook)) {
                     reindexMandatoryBookCount++;
                     toReturn.append("index outdated, ");
                 }
             }
 
         }
-        toReturn.append("\nSummary: installedBooks ").append(installedBookCount)
-            .append(", searchEnabledBooks ").append(searchEnabledBookCount)
-            .append(", booksWithOutdatedIndex ").append(reindexMandatoryBookCount)
-            .append("\n");
+        toReturn.append("\nSummary: installedBooks ").append(installedBookCount).append(", searchEnabledBooks ").append(searchEnabledBookCount)
+                .append(", booksWithOutdatedIndex ").append(reindexMandatoryBookCount).append("\n");
         return toReturn.toString();
     }
 

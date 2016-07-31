@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -33,6 +32,8 @@ import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.BibleNames;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Verse is a pointer to a single verse. Externally its unique identifier is
@@ -46,9 +47,8 @@ import org.crosswire.jsword.versification.system.Versifications;
  * way.
  * </p>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class Verse implements VerseKey<Verse> {
@@ -111,12 +111,12 @@ public final class Verse implements VerseKey<Verse> {
      *            The chapter number
      * @param verse
      *            The verse number
-     * @param patch_up
+     * @param patchUp
      *            True to trigger reference fixing
      */
-    public Verse(Versification v11n, BibleBook book, int chapter, int verse, boolean patch_up) {
-        if (!patch_up) {
-            throw new IllegalArgumentException(JSOtherMsg.lookupText("Use patch=true."));
+    public Verse(Versification v11n, BibleBook book, int chapter, int verse, boolean patchUp) {
+        if (!patchUp) {
+            throw new IllegalArgumentException(JSOtherMsg.lookupText("Use patchUp=true."));
         }
 
         this.v11n = v11n;
@@ -220,7 +220,6 @@ public final class Verse implements VerseKey<Verse> {
         return buf.toString();
     }
 
-   
     /* (non-Javadoc)
      * @see org.crosswire.jsword.passage.Key#getOsisID()
      */
@@ -303,7 +302,17 @@ public final class Verse implements VerseKey<Verse> {
         if (v11n.equals(newVersification)) {
             return this;
         }
-        return new Verse(newVersification, book, chapter, verse);
+
+        try {
+            //check the v11n supports this key, otherwise this leads to all sorts of issues
+            if (newVersification.validate(book, chapter, verse, true)) {
+                return new Verse(newVersification, book, chapter, verse);
+            }
+        } catch (NoSuchVerseException ex) {
+            // will never happen
+            log.error("Contract for validate was changed to thrown an exception when silent mode is true", ex);
+        }
+        return null;
     }
 
     /**
@@ -632,6 +641,8 @@ public final class Verse implements VerseKey<Verse> {
      * a.xy.asdf.qr
      */
     private String subIdentifier;
+
+    private static final Logger log = LoggerFactory.getLogger(Verse.class);
 
     /**
      * To make serialization work across new versions

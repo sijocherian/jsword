@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -27,9 +26,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Conversions between various types and Strings.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public final class Convert {
     /**
@@ -94,9 +92,16 @@ public final class Convert {
     /**
      * Convert a String to an Object
      * 
-     * @param data
-     *            the thing to convert
+     * @param data the thing to convert
      * @return the converted data
+     * @throws  InstantiationException
+     *               if this {@code data} represents an abstract class,
+     *               an interface, an array class, a primitive type, or void;
+     *               or if the class has no nullary constructor;
+     *               or if the instantiation fails for some other reason.
+     * @throws ClassNotFoundException if the class is not found
+     * @throws IllegalAccessException  if the class or its nullary
+     *               constructor is not accessible.
      */
     public static Object string2Object(String data) throws InstantiationException, ClassNotFoundException, IllegalAccessException {
         return ClassUtil.forName(data).newInstance();
@@ -114,48 +119,26 @@ public final class Convert {
     }
 
     /**
-     * Convert a String to a Class
+     * Convert a String to a Map, without type checking
      * 
      * @param data
      *            the thing to convert
      * @return the converted data
      */
-    public static Class<?> string2Class(String data) throws ClassNotFoundException {
-        return ClassUtil.forName(data);
-    }
-
-    /**
-     * Convert a Class to a String
-     * 
-     * @param data
-     *            the thing to convert
-     * @return the converted data
-     */
-    public static String class2String(Class<?> data) {
-        return data.getName();
-    }
-
-    /**
-     * Convert a String to a Map, with type checking
-     * 
-     * @param data
-     *            the thing to convert
-     * @return the converted data
-     */
-    public static PropertyMap string2Hashtable(String data, Class<?> superclass) {
+    public static PropertyMap string2Map(String data) {
         PropertyMap commands = new PropertyMap();
 
-        String[] data_arr = StringUtil.split(data, " ");
+        String[] parts = StringUtil.split(data, " ");
         String entry = "";
-        for (int i = 0; i < data_arr.length; i++) {
+        for (int i = 0; i < parts.length; i++) {
             try {
-                entry = data_arr[i];
-                int equ_pos = entry.indexOf('=');
-                String key = entry.substring(0, equ_pos);
-                String value = entry.substring(equ_pos + 1);
+                entry = parts[i];
+                int pos = entry.indexOf('=');
+                String key = entry.substring(0, pos);
+                String value = entry.substring(pos + 1);
                 Class<?> clazz = ClassUtil.forName(value);
 
-                if (clazz.isAssignableFrom(superclass)) {
+                if (clazz.isAssignableFrom(Object.class)) {
                     assert false;
                 } else {
                     commands.put(key, value);
@@ -167,17 +150,6 @@ public final class Convert {
         }
 
         return commands;
-    }
-
-    /**
-     * Convert a String to a Map, without type checking
-     * 
-     * @param data
-     *            the thing to convert
-     * @return the converted data
-     */
-    public static PropertyMap string2Map(String data) {
-        return string2Hashtable(data, Object.class);
     }
 
     /**
@@ -197,28 +169,6 @@ public final class Convert {
         }
 
         return retcode.toString().trim();
-    }
-
-    /**
-     * Convert a String to a StringArray
-     * 
-     * @param value
-     *            the thing to convert
-     * @return the converted data
-     */
-    public static String[] string2StringArray(String value, String separator) {
-        return StringUtil.split(value, separator);
-    }
-
-    /**
-     * Convert a StringArray to a String
-     * 
-     * @param value
-     *            the thing to convert
-     * @return the converted data
-     */
-    public static String stringArray2String(String[] value, String separator) {
-        return StringUtil.join(value, separator);
     }
 
     /**

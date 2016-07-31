@@ -8,17 +8,16 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
-package org.crosswire.jsword.book.test;
+package org.crosswire.jsword.examples;
 
 import org.crosswire.common.util.Reporter;
 import org.crosswire.jsword.book.Book;
@@ -56,13 +55,14 @@ import org.crosswire.jsword.passage.PassageTally;
  * 
  * </p>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class Speed implements Runnable {
     /**
      * Basic constructor
+     * 
+     * @param book the book
      */
     public Speed(Book book) {
         this.book = book;
@@ -73,7 +73,7 @@ public class Speed implements Runnable {
      */
     public void run() {
         try {
-            start_time = System.currentTimeMillis();
+            startTime = System.currentTimeMillis();
 
 
             DefaultSearchModifier modifier = new DefaultSearchModifier();
@@ -114,7 +114,7 @@ public class Speed implements Runnable {
             dummyDisplay(ref);
             ref = null;
 
-            end_time = System.currentTimeMillis();
+            endTime = System.currentTimeMillis();
         } catch (BookException ex) {
             Reporter.informUser(this, ex);
         } catch (NoSuchKeyException ex) {
@@ -134,18 +134,21 @@ public class Speed implements Runnable {
     }
 
     /**
-     * Accessor for the version that we are testing
+     * Accessor for the speed of the test
+     * 
+     * @return the benchmark for the test
      */
     public long getBenchmark() {
-        if (start_time == 0 || end_time == 0) {
+        if (startTime == 0 || endTime == 0) {
             throw new IllegalStateException("The benchmark has not finished yet.");
         }
 
-        return end_time - start_time;
+        return endTime - startTime;
     }
 
     /**
      * Accessor for the version that we are testing
+     * @return the book
      */
     public Book getBook() {
         return book;
@@ -153,6 +156,8 @@ public class Speed implements Runnable {
 
     /**
      * Accessor for the version that we are testing
+     * 
+     * @param book the book
      */
     public void setBook(Book book) {
         this.book = book;
@@ -161,12 +166,12 @@ public class Speed implements Runnable {
     /**
      * The start time of the benchmark
      */
-    private long start_time = 0;
+    private long startTime;
 
     /**
      * The end time of the benchmark
      */
-    private long end_time = 0;
+    private long endTime;
 
     /**
      * The version to test

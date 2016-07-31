@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.compress;
@@ -27,8 +26,7 @@ import java.io.IOException;
  * A compressor provides the ability to compress and uncompress block text.
  * Implementing classes are expected to provide a way to supply the input.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public interface Compressor {
@@ -42,6 +40,7 @@ public interface Compressor {
      * Compresses the input and provides the result.
      * 
      * @return the compressed result
+     * @throws IOException if an exception is encountered
      */
     ByteArrayOutputStream compress() throws IOException;
 
@@ -49,6 +48,7 @@ public interface Compressor {
      * Uncompresses the input and provides the result.
      * 
      * @return the uncompressed result
+     * @throws IOException if an exception is encountered
      */
     ByteArrayOutputStream uncompress() throws IOException;
 
@@ -58,6 +58,7 @@ public interface Compressor {
      * @param expectedLength
      *            the size of the result buffer
      * @return the uncompressed result
+     * @throws IOException if an exception is encountered
      */
     ByteArrayOutputStream uncompress(int expectedLength) throws IOException;
 }

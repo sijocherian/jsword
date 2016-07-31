@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.index.search;
@@ -26,8 +25,7 @@ import org.crosswire.jsword.index.query.QueryDecoratorFactory;
 /**
  * An Enumeration of the possible types of Searches.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum SearchType {
@@ -106,17 +104,22 @@ public enum SearchType {
      * @param name
      *            The name of the BookCategory
      */
-    private SearchType(String name) {
+    SearchType(String name) {
         this.name = name;
     }
 
     /**
      * Decorate a string with the given type of decoration.
+     * @param queryWords 
+     * @return the decorated query
      */
     public abstract String decorate(String queryWords);
 
     /**
      * Lookup method to convert from a String
+     * 
+     * @param name 
+     * @return the matching search type
      */
     public static SearchType fromString(String name) {
         for (SearchType v : values()) {

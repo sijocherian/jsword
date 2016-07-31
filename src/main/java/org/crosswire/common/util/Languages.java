@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -39,8 +38,7 @@ import org.slf4j.LoggerFactory;
  * A utility class that converts bcp-47 codes as supported by {@link Language} to their
  * localized language name.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class Languages {
@@ -119,7 +117,7 @@ public final class Languages {
          * Get the language name for the code. If the language name is not known
          * then return the code.
          * 
-         * @param languageCode
+         * @param languageCode the language code
          * @return the name for the language.
          */
         public static String getName(String languageCode) {

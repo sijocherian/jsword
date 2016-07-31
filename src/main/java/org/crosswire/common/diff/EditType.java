@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.diff;
@@ -23,47 +22,48 @@ package org.crosswire.common.diff;
 /**
  * An Enumeration of the possible Edits.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum EditType  {
     /**
      * Delete a sequence.
      */
-    DELETE  ("Delete", '-'),
+    DELETE("Delete", '-'),
 
     /**
      * Insert a sequence
      */
-    INSERT  ("Insert", '+'),
+    INSERT("Insert", '+'),
 
     /**
      * Equal sequences
      */
-    EQUAL ("Equal", ' ');
+    EQUAL("Equal", ' ');
 
     /**
      * @param name
-     *            The name of the FeatureType
+     *            The name of the EditType
+     * @param symbol
+     *            The symbol of the EditType
      */
-    private EditType(String name, char symbol) {
+    EditType(String name, char symbol) {
         this.name = name;
         this.symbol = symbol;
     }
 
     /**
-     * @return te symbol for this EditType
+     * @return the symbol for this EditType
      */
     public char getSymbol() {
         return symbol;
     }
 
     /**
-     * Get a CompressorType from a String
+     * Lookup method to find an EditType by name.
      * 
-     * @param name the case insensitive representation of the desired CompressorType
-     * @return the desired compressor or null if not found.
+     * @param name the case insensitive representation of the desired EditType
+     * @return the desired EditType or null if not found.
      */
     public static EditType fromString(String name) {
         for (EditType v : values()) {
@@ -78,7 +78,11 @@ public enum EditType  {
     }
 
     /**
-     * Lookup method to convert from a String
+     * Lookup method to find an EditType by symbol.
+     * 
+     * @param symbol
+     *            The symbol of the EditType
+     * @return the desired EditType or null if not found.
      */
     public static EditType fromSymbol(char symbol) {
         for (EditType v : values()) {
@@ -92,10 +96,8 @@ public enum EditType  {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
+    /* (non-Javadoc)
+     * @see java.lang.Enum#toString()
      */
     @Override
     public String toString() {
@@ -103,7 +105,7 @@ public enum EditType  {
     }
 
     /**
-     * The name of the FeatureType
+     * The name of the EditType
      */
     private String name;
 

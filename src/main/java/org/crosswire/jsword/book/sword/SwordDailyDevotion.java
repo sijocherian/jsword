@@ -1,5 +1,5 @@
 /**
- * Distribution Licence:
+ * Distribution License:
  * JSword is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License, version 2.1 or later
  * as published by the Free Software Foundation. This program is distributed
@@ -14,7 +14,8 @@
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
+ *
  */
 package org.crosswire.jsword.book.sword;
 
@@ -28,15 +29,14 @@ import org.crosswire.jsword.passage.PreferredKey;
 /**
  * A book that has a preferred key of today's date.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author DM Smith [ dmsmith555 at yahoo dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author DM Smith
  */
 public class SwordDailyDevotion extends SwordDictionary implements PreferredKey {
     /**
      * Construct an SwordDailyDevotion given the BookMetaData and the AbstractBackend.
      * 
-     * @param bmd the metadata that describes the book
+     * @param sbmd the metadata that describes the book
      * @param backend the means by which the resource is accessed
      */
     public SwordDailyDevotion(SwordBookMetaData sbmd, Backend backend) {

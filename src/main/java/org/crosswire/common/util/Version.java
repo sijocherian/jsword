@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2011
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2011 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -28,7 +27,7 @@ import java.util.regex.Pattern;
  * 
  * <p>
  * Here is the grammar for version strings:
- * 
+ * </p>
  * <pre>
  * version ::= major('.'minor('.'micro('.'nano)?)?)?
  * major ::= [0-9]+
@@ -37,8 +36,7 @@ import java.util.regex.Pattern;
  * nano  ::= [0-9]+
  * </pre>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class Version implements Comparable<Version> {
@@ -88,11 +86,11 @@ public class Version implements Comparable<Version> {
     }
 
     /**
-     * Compares this <code>Version object to another object.
+     * Compares this <code>Version</code> object to another object.
      * 
      * <p>
      * A version is considered to be equal to another version if all the
-     * parts are equal.
+     * parts are equal.</p>
      * 
      * @param object The <code>Version</code> object to be compared.
      * @return true if the two objects are equal.

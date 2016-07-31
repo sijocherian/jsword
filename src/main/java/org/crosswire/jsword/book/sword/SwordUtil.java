@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -28,15 +27,15 @@ import java.net.URI;
 import org.crosswire.common.util.NetUtil;
 import org.crosswire.jsword.JSOtherMsg;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Various utilities used by different Sword classes.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public final class SwordUtil {
     /**
@@ -79,6 +78,17 @@ public final class SwordUtil {
         int size = theSize;
         long rafSize = raf.length();
 
+        // It is common to have an entry that points to nothing.
+        // That is the equivalent of an empty string.
+        if (size == 0) {
+            return new byte[0];
+        }
+
+        if (size < 0) {
+            log.error("Nothing to read at offset = {} returning empty because negative size={}", Long.toString(offset), Integer.toString(size));
+            return new byte[0];
+        }
+
         if (offset >= rafSize) {
             log.error("Attempt to read beyond end. offset={} size={} but raf.length={}", Long.toString(offset), Integer.toString(size), Long.toString(rafSize));
             return new byte[0];
@@ -87,11 +97,6 @@ public final class SwordUtil {
         if (offset + size > raf.length()) {
             log.error("Need to reduce size to avoid EOFException. offset={} size={} but raf.length={}", Long.toString(offset), Integer.toString(size), Long.toString(rafSize));
             size = (int) (raf.length() - offset);
-        }
-
-        if (size < 1) {
-            log.error("Nothing to read at offset = {} returning empty because size={}", Long.toString(offset), Integer.toString(size));
-            return new byte[0];
         }
 
         byte[] read = new byte[size];
@@ -289,6 +294,7 @@ public final class SwordUtil {
      * is bad then it just does it as a string.
      * Note: this may modify data. Don't use it to examine data.
      * 
+     * @param key the key
      * @param data
      *            The byte array to be converted
      * @param charset
@@ -304,6 +310,7 @@ public final class SwordUtil {
      * the encoding is bad then it just does it as a string.
      * Note: this may modify data. Don't use it to examine data.
      * 
+     * @param key the key
      * @param data
      *            The byte array to be converted
      * @param length
@@ -321,6 +328,7 @@ public final class SwordUtil {
      * given the encoding. If the encoding is bad then it just does it as a
      * string. Note: this may modify data. Don't use it to examine data.
      * 
+     * @param key the key
      * @param data
      *            The byte array to be converted
      * @param offset
@@ -378,8 +386,8 @@ public final class SwordUtil {
      * @return the URI locating the resource
      * @throws BookException thrown if an issue is encountered, e.g. missing data files.
      */
-    public static URI getExpandedDataPath(SwordBookMetaData bookMetaData) throws BookException {
-        URI loc = NetUtil.lengthenURI(bookMetaData.getLibrary(), (String) bookMetaData.getProperty(ConfigEntryType.DATA_PATH));
+    public static URI getExpandedDataPath(BookMetaData bookMetaData) throws BookException {
+        URI loc = NetUtil.lengthenURI(bookMetaData.getLibrary(), bookMetaData.getProperty(SwordBookMetaData.KEY_DATA_PATH));
 
         if (loc == null) {
             // FIXME(DMS): missing parameter

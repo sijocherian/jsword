@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.util;
@@ -29,9 +28,8 @@ import org.crosswire.jsword.JSOtherMsg;
 /**
  * A factory for Converters.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @see org.crosswire.common.xml.Converter
  */
 public final class ConverterFactory {
@@ -43,6 +41,7 @@ public final class ConverterFactory {
 
     /**
      * Generate a converter for the current converter name
+     * @return the plugin converter
      */
     public static Converter getConverter() {
         try {
@@ -59,6 +58,8 @@ public final class ConverterFactory {
 
     /**
      * Get a map of the known converters, by looking up the answers in Project
+     * 
+     * @return the map of known converters
      */
     public static Map<String, Class<Converter>> getKnownConverters() {
         return PluginUtil.getImplementorsMap(Converter.class);
@@ -66,6 +67,8 @@ public final class ConverterFactory {
 
     /**
      * For config to set the currently preferred converter implementation
+     * 
+     * @param name 
      */
     public static void setCurrentConverterName(String name) {
         ConverterFactory.name = name;
@@ -73,6 +76,8 @@ public final class ConverterFactory {
 
     /**
      * For config to read the currently preferred converter implementation
+     * 
+     * @return the current plugin converter
      */
     public static String getCurrentConverterName() {
         return name;

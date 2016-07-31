@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -25,9 +24,8 @@ import org.crosswire.jsword.JSMsg;
 /**
  * An Enumeration of the possible types of Book.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public enum BookCategory {
@@ -78,14 +76,18 @@ public enum BookCategory {
     /**
      * @param name
      *            The name of the BookCategory
+     * @param externalName the name of the BookCategory worthy of an end user
      */
-    private BookCategory(String name, String externalName) {
+    BookCategory(String name, String externalName) {
         this.name = name;
         this.externalName = externalName;
     }
 
     /**
      * Lookup method to convert from a String
+     * 
+     * @param name the internal name of a BookCategory
+     * @return the matching BookCategory
      */
     public static BookCategory fromString(String name) {
         for (BookCategory o : BookCategory.values()) {
@@ -98,6 +100,9 @@ public enum BookCategory {
 
     /**
      * Lookup method to convert from a String
+     * 
+     * @param name the external name of a BookCategory
+     * @return the matching BookCategory
      */
     public static BookCategory fromExternalString(String name) {
         for (BookCategory o : BookCategory.values()) {
@@ -110,6 +115,9 @@ public enum BookCategory {
 
     /**
      * Lookup method to convert from an integer
+     * 
+     * @param i the ordinal value of the BookCategory in this enumeration.
+     * @return the i-th BookCategory
      */
     public static BookCategory fromInteger(int i) {
         for (BookCategory o : BookCategory.values()) {

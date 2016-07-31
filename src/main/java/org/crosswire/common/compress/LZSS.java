@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.compress;
@@ -30,7 +29,7 @@ import java.util.Arrays;
  * information gives the history of this implementation.
  * 
  * <p>
- * Compression Info, 10-11-95<br/>
+ * Compression Info, 10-11-95<br>
  * Jeff Wheeler
  * </p>
  * 
@@ -98,7 +97,7 @@ import java.util.Arrays;
  * tree has been proposed by Bell [3].
  * </p>
  * 
- * The algorithm is quite simple.<br/>
+ * The algorithm is quite simple.
  * <ol>
  * <li>Keep a ring buffer which initially contains all space characters.</li>
  * <li>Read several letters from the file to the buffer.</li>
@@ -108,24 +107,23 @@ import java.util.Arrays;
  * 
  * <p>
  * If the ring buffer is 4096 bytes, the position can be stored in 12 bits. If
- * the length is represented in 4 bits, the <position, length> pair is two bytes
+ * the length is represented in 4 bits, the &lt;position, length&gt; pair is two bytes
  * long. If the longest match is no more than two characters, then just one
  * character is sent without encoding. The process starts again with the next
  * character. An extra bit is sent each time to tell the decoder whether the
- * next item is a character of a <position, length> pair.
+ * next item is a character of a &lt;position, length&gt; pair.
  * </p>
  * 
  * <p>
- * [1] J. Ziv and A. Lempel, IEEE Transactions IT-23, 337-343 (1977).<br/>
- * [2] J. A. Storer and T. G. Szymanski, J. ACM, 29, 928-951 (1982).<br/>
+ * [1] J. Ziv and A. Lempel, IEEE Transactions IT-23, 337-343 (1977).<br>
+ * [2] J. A. Storer and T. G. Szymanski, J. ACM, 29, 928-951 (1982).<br>
  * [3] T.C. Gell, IEEE Transactions COM-34, 1176-1182 (1986).
  * </p>
  * 
  * Regarding this port to Java and not the original code, the following license
  * applies:
  * 
- * @see gnu.lgpl.License for license details.<br/>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class LZSS extends AbstractCompressor {
@@ -641,7 +639,7 @@ public class LZSS extends AbstractCompressor {
 
     /**
      * This is used to determine the next position in the ring buffer, from 0 to
-     * RING_SIZE - 1. The idiom s = (s + 1) & RING_WRAP; will ensure this. This
+     * RING_SIZE - 1. The idiom s = (s + 1) &amp; RING_WRAP; will ensure this. This
      * only works if RING_SIZE is a power of 2. Note this is slightly faster
      * than the equivalent: s = (s + 1) % RING_SIZE;
      */

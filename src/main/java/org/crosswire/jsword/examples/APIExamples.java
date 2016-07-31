@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.examples;
@@ -62,9 +61,8 @@ import org.xml.sax.SAXException;
  * All the methods in this class highlight some are of the API and how to use
  * it.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class APIExamples {
     /**
@@ -91,6 +89,9 @@ public class APIExamples {
      *            the book to use
      * @param reference
      *            a reference, appropriate for the book, of one or more entries
+     * @return the plain text for the reference
+     * @throws BookException 
+     * @throws NoSuchKeyException 
      */
     public String getPlainText(String bookInitials, String reference) throws BookException, NoSuchKeyException {
         Book book = getBook(bookInitials);
@@ -111,6 +112,10 @@ public class APIExamples {
      *            the book to use
      * @param reference
      *            a reference, appropriate for the book, of one or more entries
+     * @param maxKeyCount 
+     * @return a SAX Event Provider to retrieve the reference
+     * @throws BookException 
+     * @throws NoSuchKeyException 
      */
     public SAXEventProvider getOSIS(String bookInitials, String reference, int maxKeyCount) throws BookException, NoSuchKeyException {
         if (bookInitials == null || reference == null) {
@@ -147,7 +152,12 @@ public class APIExamples {
      *            the book to use
      * @param reference
      *            a reference, appropriate for the book, of one or more entries
+     * @param maxKeyCount 
      * @return the styled text
+     * @throws NoSuchKeyException 
+     * @throws BookException 
+     * @throws TransformerException 
+     * @throws SAXException 
      * @see Book
      * @see SAXEventProvider
      */
@@ -179,6 +189,7 @@ public class APIExamples {
      * slightly different way. It is also worth looking at the JavaDoc for Book
      * that has a way of treating Bible, Commentary and Dictionary the same.
      * 
+     * @throws BookException 
      * @see Book
      */
     public void readDictionary() throws BookException {
@@ -202,6 +213,8 @@ public class APIExamples {
 
     /**
      * An example of how to search for various bits of data.
+     * 
+     * @throws BookException 
      */
     public void search() throws BookException {
         Book bible = Books.installed().getBook(BIBLE_NAME);
@@ -392,15 +405,15 @@ public class APIExamples {
                     // This should be a call on installer.
                     book.getDriver().delete(book);
                 }
-            } catch (BookException e1) {
-                e1.printStackTrace();
+            } catch (BookException ex) {
+                ex.printStackTrace();
             }
 
             try {
                 // Now install it. Note this is a background task.
                 installer.install(book);
-            } catch (InstallException e) {
-                e.printStackTrace();
+            } catch (InstallException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -409,7 +422,7 @@ public class APIExamples {
      * A simple BookFilter that looks for a Bible by name.
      */
     static class MyBookFilter implements BookFilter {
-        public MyBookFilter(String bookName) {
+        MyBookFilter(String bookName) {
             name = bookName;
         }
 
@@ -447,6 +460,7 @@ public class APIExamples {
 
     /**
      * Quick Demo
+     * @param args 
      * 
      * @throws NoSuchKeyException
      * @throws BookException

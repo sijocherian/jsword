@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.diff;
@@ -26,8 +25,7 @@ package org.crosswire.common.diff;
  * Based on the LGPL Diff_Match_Patch v1.5 javascript of Neil Fraser, Copyright (C) 2006<br>
  * <a href="http://neil.fraser.name/software/diff_match_patch/">http://neil.fraser.name/software/diff_match_patch/</a>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class Commonality {
@@ -135,14 +133,6 @@ public final class Commonality {
         return null;
     }
 
-    private static int ceil(int number, int divisor) {
-        assert divisor > 0;
-        int result = number / divisor + ((number % divisor) > 0 ? 1 : 0);
-        // assert result == (int) Math.ceil(((double) number) / ((double)
-        // divisor));
-        return result;
-    }
-
     /**
      * Does a substring of shortText exist within longText such that the
      * substring is at least half the length of longText?
@@ -183,6 +173,13 @@ public final class Commonality {
         }
 
         return null;
+    }
+
+    private static int ceil(int number, int divisor) {
+        assert divisor > 0;
+        int result = number / divisor + ((number % divisor) > 0 ? 1 : 0);
+        // assert result == (int) Math.ceil(((double) number) / ((double) divisor));
+        return result;
     }
 
 }

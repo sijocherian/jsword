@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.index.lucene.analysis;
@@ -38,10 +37,9 @@ import org.slf4j.LoggerFactory;
  * This is book specific since it is possible that each book has specialized
  * search requirements.
  * 
- * Uses AnalyzerFactory for InstalledIndexVersion > 1.1
+ * Uses AnalyzerFactory for InstalledIndexVersion &gt; 1.1
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class LuceneAnalyzer extends Analyzer {
@@ -57,7 +55,7 @@ public class LuceneAnalyzer extends Analyzer {
             analyzer.addAnalyzer(LuceneIndex.FIELD_BODY, myNaturalLanguageAnalyzer);
             //analyzer.addAnalyzer(LuceneIndex.FIELD_HEADING, myNaturalLanguageAnalyzer);  //heading to use same analyzer as BODY
             //analyzer.addAnalyzer(LuceneIndex.FIELD_INTRO, myNaturalLanguageAnalyzer);
-            log.debug(book.getBookMetaData().getInitials()+" Using languageAnalyzer: "+ myNaturalLanguageAnalyzer.getClass().getName());
+            log.debug("{}: Using languageAnalyzer: {}", book.getBookMetaData().getInitials(), myNaturalLanguageAnalyzer.getClass().getName());
         }
 
         // Keywords are normalized to osisIDs

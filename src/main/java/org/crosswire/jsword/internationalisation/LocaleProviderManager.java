@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2013 - 2016
  *
  */
 package org.crosswire.jsword.internationalisation;
@@ -24,12 +23,12 @@ import java.util.Locale;
 
 /**
  * A factory for creating LocaleProvider objects, to support all the static instances of where JSword needs access to the the Locale.
- * <p />
+ * <p>
  * It is expected that the LocaleProvider will only be set once, as a result, no effort is made to make this thread-safe as this should happen on
  * start up of the application. A default locale provider is given which simply returns the default locale. See {@link DefaultLocaleProvider} for more details.
- *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * </p>
+ * 
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author Chris Burrell
  */
 public final class LocaleProviderManager {

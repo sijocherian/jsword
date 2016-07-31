@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2012
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2012 - 2016
  *
  */
 package org.crosswire.jsword.versification;
@@ -37,8 +36,7 @@ import org.crosswire.jsword.passage.VerseRange;
  * the number of chapters in each BibleBook,
  * the number of verses in each chapter.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class Versification implements ReferenceSystem, Serializable {
@@ -211,11 +209,42 @@ public class Versification implements ReferenceSystem, Serializable {
     }
 
     /**
+     * Get a book from its name.
+     *
+     * @param find
+     *            The string to identify
+     * @return The BibleBook, On error null
+     */
+    public BibleBook getBook(String find) {
+        BibleBook book = BibleNames.instance().getBook(find);
+        if (containsBook(book)) {
+            return book;
+        }
+        return null;
+    }
+
+    /**
      * Get the number of books in this Versification.
      * @return the number of books
      */
     public int getBookCount() {
         return bookList.getBookCount();
+    }
+
+    /**
+     * The number of books between two verses includes
+     * the books of the two verses and everything in between.
+     * 
+     * @param start
+     *            The first Verse in the range
+     * @param end The last Verse in the range
+     * @return The number of books. Always &gt;= 1.
+     */
+    public int getBookCount(Verse start, Verse end) {
+        int startBook = bookList.getOrdinal(start.getBook());
+        int endBook = bookList.getOrdinal(end.getBook());
+
+        return endBook - startBook + 1;
     }
 
     /**
@@ -294,6 +323,7 @@ public class Versification implements ReferenceSystem, Serializable {
      * Get the full name of a book (e.g. "Genesis"). Altered by the case setting
      * (see setBookCase())
      *
+     * @param book the book of the Bible
      * @return The full name of the book or null if not in this versification
      */
     public String getLongName(BibleBook book) {
@@ -307,6 +337,7 @@ public class Versification implements ReferenceSystem, Serializable {
      * Get the short name of a book (e.g. "Gen"). Altered by the case setting
      * (see setBookCase())
      *
+     * @param book the book of the Bible
      * @return The short name of the book or null if not in this versification
      */
     public String getShortName(BibleBook book) {
@@ -315,21 +346,6 @@ public class Versification implements ReferenceSystem, Serializable {
         }
         return null;
       }
-
-    /**
-     * Get a book from its name.
-     *
-     * @param find
-     *            The string to identify
-     * @return The BibleBook, On error null
-     */
-    public BibleBook getBook(String find) {
-        BibleBook book = BibleNames.instance().getBook(find);
-        if (containsBook(book)) {
-            return book;
-        }
-        return null;
-    }
 
     /**
      * Is the given string a valid book name. If this method returns true then
@@ -508,8 +524,8 @@ public class Versification implements ReferenceSystem, Serializable {
      * last verse in a chapter or book is adjacent every verse that
      * follows up to and including verse 1 of the next chapter in
      * the versification.
-     * <br/>
-     * For example:<br/>
+     * <br>
+     * For example:<br>
      * The last verse in the Old Testament is adjacent to:
      * <ul>
      * <li>Intro.NT - the New Testament introduction</li>
@@ -708,7 +724,7 @@ public class Versification implements ReferenceSystem, Serializable {
      * @param start
      *            The first Verse in the range
      * @param end The last Verse in the range
-     * @return The number of chapters. Always >= 1.
+     * @return The number of chapters. Always &gt;= 1.
      */
     public int getChapterCount(Verse start, Verse end) {
         BibleBook startBook = start.getBook();
@@ -730,22 +746,6 @@ public class Versification implements ReferenceSystem, Serializable {
         total += endChap;
 
         return total;
-    }
-
-    /**
-     * The number of books between two verses includes
-     * the books of the two verses and everything in between.
-     * 
-     * @param start
-     *            The first Verse in the range
-     * @param end The last Verse in the range
-     * @return The number of books. Always >= 1.
-     */
-    public int getBookCount(Verse start, Verse end) {
-        int startBook = bookList.getOrdinal(start.getBook());
-        int endBook = bookList.getOrdinal(end.getBook());
-
-        return endBook - startBook + 1;
     }
 
     /**
@@ -795,6 +795,25 @@ public class Versification implements ReferenceSystem, Serializable {
     }
 
     /**
+     * Determine the ordinal value for this versification given the
+     * ordinal value in a testament. If the ordinal is out of bounds it
+     * is constrained to be within the boundaries of the testament.
+     * This unwinds getTestamentOrdinal.
+     * 
+     * @param testament the testament in which the ordinal value pertains
+     * @param testamentOrdinal the ordinal value within the testament
+     * @return the ordinal value for the versification as a whole
+     */
+    public int getOrdinal(Testament testament, int testamentOrdinal) {
+        int ordinal = testamentOrdinal >= 0 ? testamentOrdinal : 0;
+        if (Testament.NEW == testament) {
+            ordinal = otMaxOrdinal + testamentOrdinal;
+            return ordinal <= ntMaxOrdinal ? ordinal : ntMaxOrdinal;
+        }
+        return ordinal <= otMaxOrdinal ? ordinal : otMaxOrdinal;
+    }
+
+    /**
      * Where does this verse come in the Bible. The value that this returns should be treated as opaque, useful for a bit set.
      * The introductions to the Book, OT/NT Testaments, Bible books and chapters are included here.
      * <ul>
@@ -821,34 +840,17 @@ public class Versification implements ReferenceSystem, Serializable {
      * @return The ordinal number of the Verse within its Testament
      */
     public int getTestamentOrdinal(int ordinal) {
-        int nt_ordinal = otMaxOrdinal + 1;
-        if (ordinal >= nt_ordinal) {
-            return ordinal - nt_ordinal + 1;
+        int ntOrdinal = otMaxOrdinal + 1;
+        if (ordinal >= ntOrdinal) {
+            return ordinal - ntOrdinal + 1;
         }
         return ordinal;
     }
 
     /**
-     * Determine the ordinal value for this versification given the
-     * ordinal value in a testament. If the ordinal is out of bounds it
-     * is constrained to be within the boundaries of the testament.
-     * This unwinds getTestamentOrdinal.
-     * 
-     * @param testament the testament in which the ordinal value pertains
-     * @param testamentOrdinal the ordinal value within the testament
-     * @return the ordinal value for the versification as a whole
-     */
-    public int getOrdinal(Testament testament, int testamentOrdinal) {
-        int ordinal = testamentOrdinal >= 0 ? testamentOrdinal : 0;
-        if (Testament.NEW == testament) {
-            ordinal = otMaxOrdinal + testamentOrdinal;
-            return ordinal <= ntMaxOrdinal ? ordinal : ntMaxOrdinal;
-        }
-        return ordinal <= otMaxOrdinal ? ordinal : otMaxOrdinal;
-    }
-
-    /**
      * Get the testament of a given verse
+     * @param ordinal the ordinal position of the verse in the whole Bible
+     * @return the testament in which that verse is found
      */
     public Testament getTestament(int ordinal) {
         if (ordinal > otMaxOrdinal) {
@@ -981,9 +983,33 @@ public class Versification implements ReferenceSystem, Serializable {
      *                If the reference is illegal
      */
     public void validate(BibleBook book, int chapter, int verse) throws NoSuchVerseException {
+        validate(book, chapter, verse, false);
+    }
 
+    /**
+     * Does the following represent a real verse?. It is code like this that
+     * makes me wonder if I18 is done well/worth doing. All this code does is
+     * check if the numbers are valid, but the exception handling code is huge
+     * :(
+     *
+     * @param book
+     *            The book part of the reference.
+     * @param chapter
+     *            The chapter part of the reference.
+     * @param verse
+     *            The verse part of the reference.
+     * @param silent
+     *            true to indicate we do not want to throw an exception
+     * @return true if validation was succesful
+     * @exception NoSuchVerseException
+     *                If the reference is illegal and silent was false
+     */
+    public boolean validate(BibleBook book, int chapter, int verse, boolean silent) throws NoSuchVerseException {
         // Check the book
         if (book == null) {
+            if (silent) {
+                return false;
+            }
             // TRANSLATOR: The user did not supply a book for a verse reference.
             throw new NoSuchVerseException(JSOtherMsg.lookupText("Book must not be null"));
         }
@@ -991,6 +1017,9 @@ public class Versification implements ReferenceSystem, Serializable {
         // Check the chapter
         int maxChapter = getLastChapter(book);
         if (chapter < 0 || chapter > maxChapter) {
+            if (silent) {
+                return false;
+            }
             // TRANSLATOR: The user supplied a chapter that was out of bounds. This tells them what is allowed.
             // {0} is the lowest value that is allowed. This is always 0.
             // {1,number,integer} is the place holder for the highest chapter number in the book. The format is special in that it will present it in the user's preferred format.
@@ -998,12 +1027,15 @@ public class Versification implements ReferenceSystem, Serializable {
             // {3,number,integer} is a placeholder for the chapter number that the user gave.
             throw new NoSuchVerseException(JSMsg.gettext("Chapter should be between {0} and {1,number,integer} for {2} (given {3,number,integer}).",
                     Integer.valueOf(0), Integer.valueOf(maxChapter), getPreferredName(book), Integer.valueOf(chapter)
-                    ));
+            ));
         }
 
         // Check the verse
         int maxVerse = getLastVerse(book, chapter);
         if (verse < 0 || verse > maxVerse) {
+            if (silent) {
+                return false;
+            }
             // TRANSLATOR: The user supplied a verse number that was out of bounds. This tells them what is allowed.
             // {0} is the lowest value that is allowed. This is always 0.
             // {1,number,integer} is the place holder for the highest verse number in the chapter. The format is special in that it will present it in the user's preferred format.
@@ -1014,6 +1046,7 @@ public class Versification implements ReferenceSystem, Serializable {
                     Integer.valueOf(0), Integer.valueOf(maxVerse), getPreferredName(book), Integer.valueOf(chapter), Integer.valueOf(verse)
                     ));
         }
+        return true;
     }
 
     /**

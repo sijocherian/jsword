@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005 - 2012
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.versification;
@@ -28,8 +27,7 @@ import java.util.Map;
  * A BibleBook is a book of the Bible. It may or may not be canonical.
  * Note that the ordering of these books varies from one Versification to another.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum BibleBook {
@@ -114,7 +112,7 @@ public enum BibleBook {
     WIS("Wis"),
     SIR("Sir"),
     BAR("Bar"),
-    EP_JER("EpJer"),
+    EP_JER("EpJer", true),
     PR_AZAR("PrAzar"),
     SUS("Sus"),
     BEL("Bel"),
@@ -122,7 +120,7 @@ public enum BibleBook {
     MACC2("2Macc"),
     MACC3("3Macc"),
     MACC4("4Macc"),
-    PR_MAN("PrMan"),
+    PR_MAN("PrMan", true),
     ESD1("1Esd"),
     ESD2("2Esd"),
     PSS151("Ps151"),

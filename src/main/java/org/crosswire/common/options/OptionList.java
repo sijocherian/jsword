@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.common.options;
@@ -29,8 +28,7 @@ import java.util.Map;
  * An OptionList contains an ordered set of Options. The primary ability of an
  * OptionList is to find the matches for an Option.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class OptionList {
@@ -44,7 +42,7 @@ public class OptionList {
      * "undefined" behavior for an Option's short or long name to already be
      * known.
      * 
-     * @param option
+     * @param option the option to append
      */
     public void add(Option option) {
         char shortName = option.getShortName();

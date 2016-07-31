@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.common.options;
@@ -27,9 +26,9 @@ import java.util.Map;
 
 /**
  * GetOptions parses an argument list for requested arguments given by an
- * OptionList.<br/>
+ * OptionList.<br><br>
  * 
- * This supports short and long options:<br/>
+ * This supports short and long options:<br>
  * Short Options have the following characteristics.
  * <ul>
  * <li>A single dash, '-', starts a flag or a flag sequence. An example of a
@@ -53,8 +52,7 @@ import java.util.Map;
  * long option is typically descriptive, but can be a single character.</li>
  * <li>An argument may be given in one of two ways --file=filename or --file
  * filename. That is, separated by an '=' sign or whitespace.</li>
- * <li>
- * <ul>
+ * </ul>
  * Note:
  * <ul>
  * <li>Options can be repeated. What that means is up to the program.</li>
@@ -64,8 +62,7 @@ import java.util.Map;
  * <li>Unrecognized arguments are moved after the processed flags.</li>
  * </ul>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class GetOptions {

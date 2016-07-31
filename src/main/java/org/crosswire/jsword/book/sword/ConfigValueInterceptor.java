@@ -8,39 +8,30 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2014 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
 
-import org.crosswire.jsword.book.BookException;
-
 /**
- * Indicates that the files are missing, and therefore this book should be excluded
+ * Intercepts values from the configuration before these are widely distributed to the rest of the application.
  *
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author Chris Burrell
  */
-public class MissingDataFilesException extends BookException {
+public interface ConfigValueInterceptor {
     /**
-     * Instantiates a new missing data files exception.
-     *
-     * @param msg the msg
+     * Intercepts a value before distribution to the rest of the JSword library
+     * @param bookName the initials of the book that is being intercepted
+     * @param configEntryType the configuration entry type, describing which field is being accessed
+     * @param value the value to be intercepted
+     * @return the new value, if different
      */
-    public MissingDataFilesException(String msg) {
-        super(msg);
-    }
-
-    /**
-     * Serialization ID
-     */
-    private static final long serialVersionUID = -130074367541462750L;
+    Object intercept(String bookName, ConfigEntryType configEntryType, Object value);
 }

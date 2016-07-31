@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.jsword.bridge;
@@ -36,8 +35,7 @@ import org.crosswire.jsword.book.install.Installer;
  * Exports the Book in SWORD's imp format. This is identical to SWORD's mod2imp.
  * Note: it does not work with GenBook.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class BookInstaller {
@@ -85,6 +83,7 @@ public class BookInstaller {
      * 
      * @param filter
      *            The book filter
+     * @return the list of matching books
      * @see BookFilter
      * @see Books
      */
@@ -97,6 +96,7 @@ public class BookInstaller {
      * 
      * @param filterSpec
      *            The filter string
+     * @return the list of matching books
      * @see BookFilters#getCustom(java.lang.String)
      * @see Books
      */
@@ -128,8 +128,11 @@ public class BookInstaller {
     /**
      * Get a list of books in a repository by BookFilter.
      * 
+     * @param repositoryName 
+     *            The name of the repository
      * @param filter
      *            The book filter
+     * @return the matching books
      * @see BookFilter
      * @see Books
      */
@@ -140,8 +143,11 @@ public class BookInstaller {
     /**
      * Get a list of books in a repository by CustomFilter specification
      * 
+     * @param repositoryName 
+     *            the name of the repository
      * @param filterSpec
      *            The filter string
+     * @return the list of books
      * @see BookFilters#getCustom(java.lang.String)
      * @see Books
      */
@@ -152,6 +158,8 @@ public class BookInstaller {
     /**
      * Get a particular installed book by initials.
      * 
+     * @param repositoryName 
+     *            the name of the repository
      * @param bookInitials
      *            The book name to search for
      * @return The found book. Null otherwise.
@@ -214,9 +222,9 @@ public class BookInstaller {
      * BookInstaller can manage the installation of books with the following
      * capabilities.
      * 
-     * Usage: BookInstaller [option]<br/>
-     * Options:
+     * <p>Usage: BookInstaller [option]</p>
      * <table border="0">
+     * <caption>Options</caption>
      * <tr>
      * <td>uninstall</td>
      * <td>bookName</td>

@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/llgpl.html
+ *       http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.config;
@@ -27,9 +26,8 @@ import java.util.EventObject;
 /**
  * An event indicating that an exception has happened.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class ConfigEvent extends EventObject {
     /**
@@ -37,6 +35,8 @@ public class ConfigEvent extends EventObject {
      * 
      * @param source
      *            The event originator, or log stream
+     * @param key the key for the config item
+     * @param model the config item
      */
     public ConfigEvent(Object source, String key, Choice model) {
         super(source);
@@ -75,9 +75,10 @@ public class ConfigEvent extends EventObject {
     /**
      * Serialization support.
      * 
-     * @param is
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param is the input stream
+     * @throws  IOException if an I/O error occurs.
+     * @throws  ClassNotFoundException if the class of a serialized object
+     *          could not be found.
      */
     private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
         // Broken but we don't serialize events

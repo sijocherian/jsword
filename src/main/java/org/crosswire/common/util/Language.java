@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -31,8 +30,7 @@ import java.util.Locale;
  * </ul>
  * Note: This is a subset of the BCP-47 standard.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class Language implements Comparable<Language> {
@@ -238,6 +236,9 @@ public class Language implements Comparable<Language> {
      */
     @Override
     public int hashCode() {
+        if (found == null) {
+            getName();
+        }
         return found.hashCode();
     }
 
@@ -276,7 +277,8 @@ public class Language implements Comparable<Language> {
 
     /**
      * Split the specification on '-' into 1 to 3 parts.
-     * @param spec
+     * 
+     * @param spec the specification to parse
      */
     private void parse(String spec) {
         String specification = spec;
@@ -357,8 +359,9 @@ public class Language implements Comparable<Language> {
 
     /**
      * Equal if both a and b are the same.
-     * @param a
-     * @param b
+     * 
+     * @param a a string to compare
+     * @param b a string to compare
      * @return true if both are the same.
      */
     private boolean compareStrings(String a, String b) {

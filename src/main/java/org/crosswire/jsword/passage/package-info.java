@@ -1,3 +1,22 @@
+/*
+ * Distribution License:
+ * JSword is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License, version 2.1 or later
+ * as published by the Free Software Foundation. This program is distributed
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * The License is available on the internet at:
+ *      http://www.gnu.org/copyleft/lgpl.html
+ * or by writing to:
+ *      Free Software Foundation, Inc.
+ *      59 Temple Place - Suite 330
+ *      Boston, MA 02111-1307, USA
+ *
+ * © CrossWire Bible Society, 2005 - 2016
+ *
+ */
 /**
 <p>
   The core responsibility of the passage package is to store and collate
@@ -10,7 +29,7 @@
 </p>
 
 
-<h4>Passage</h4>
+<h1>Passage</h1>
 <p>
   A <code>Passage</code> is modeled after the JDK 2.0 <code>Collections</code>
   interface - so all the usual <code>add()</code>, <code>remove()</code> type
@@ -61,7 +80,7 @@
   <code>Passages</code> of a suitable type.
 </p>
 
-<h4>PassageTally</h4>
+<h2>PassageTally</h2>
 
 <p>
   The <code>PassageTally</code> class is-a to <code>Passage</code> however it's
@@ -79,14 +98,14 @@
   John 3:16.
 </p>
 
-<h4>Strongs</h4>
+<h2>Strongs</h2>
 
 <p>
   The <code>Strongs</code> class represents a Hebrew or Greek word, or a
   parsing number indicating the way the verse is aimed.
 </p>
 
-<h4>Other Stuff</h4>
+<h2>Other Stuff</h2>
 
 <p>
   This package has a <code>SelfTest</code> class that is designed to stress

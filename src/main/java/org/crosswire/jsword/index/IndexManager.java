@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.index;
@@ -28,14 +27,14 @@ import org.crosswire.jsword.book.BookException;
 /**
  * Manages the life-cycle of an Index.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public interface IndexManager {
     /**
      * Detects if index data has been stored and is valid for this Bible.
      * 
+     * @param book the book
      * @return true if the book has a usable index
      */
     boolean isIndexed(Book book);
@@ -43,7 +42,9 @@ public interface IndexManager {
     /**
      * Create a new Searcher.
      * 
+     * @param book the book
      * @return an index that can be searched.
+     * @throws BookException 
      */
     Index getIndex(Book book) throws BookException;
 
@@ -79,6 +80,7 @@ public interface IndexManager {
      *            The book that we downloaded an index for
      * @param tempDest
      *            The URI of a zip file to install
+     * @throws BookException 
      */
     void installDownloadedIndex(Book book, URI tempDest) throws BookException;
 
@@ -87,6 +89,7 @@ public interface IndexManager {
      * you created.
      * 
      * @param book the book who's index should be deleted.
+     * @throws BookException 
      */
     void deleteIndex(Book book) throws BookException;
 

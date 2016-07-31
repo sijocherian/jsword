@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.examples;
@@ -41,8 +40,7 @@ import org.xml.sax.SAXException;
 /**
  * Start of a mechanism to extract a Dictionary module to OSIS.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class DictToOsis {
@@ -53,6 +51,8 @@ public class DictToOsis {
 
     /**
      * @param args
+     * @throws BookException 
+     * @throws IOException 
      */
     public static void main(String[] args) throws BookException, IOException {
         new DictToOsis().dump(BOOK_NAME);

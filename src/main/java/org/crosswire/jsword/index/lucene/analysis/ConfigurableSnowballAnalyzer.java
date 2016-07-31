@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2007
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2007 - 2016
  *
  */
 package org.crosswire.jsword.index.lucene.analysis;
@@ -67,9 +66,8 @@ import org.crosswire.jsword.book.Book;
  * This list is expected to expand, as and when Snowball project support more
  * languages
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author sijo cherian [sijocherian at yahoo dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author sijo cherian
  */
 public class ConfigurableSnowballAnalyzer extends AbstractBookAnalyzer {
     public ConfigurableSnowballAnalyzer() {

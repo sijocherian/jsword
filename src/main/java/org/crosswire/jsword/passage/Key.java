@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -29,9 +28,8 @@ import java.io.Serializable;
  * KeyLists can only store other Keys and simplified by making add() and
  * remove() return void and not a boolean.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializable {
     /**
@@ -44,15 +42,6 @@ public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializ
     String getName();
 
     /**
-     * A Human readable version of the Key's top level name. For Biblical
-     * passages this uses short books names. For a dictionary it might return
-     * A-Z.
-     * 
-     * @return a String containing a description of the Key
-     */
-    String getRootName();
-
-    /**
      * Translate the Key into a human readable string, with the assumption that
      * the specified Key has just been output, so if we are in the same region,
      * we do not need to display the region name, and so on.
@@ -62,6 +51,15 @@ public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializ
      * @return The string representation
      */
     String getName(Key base);
+
+    /**
+     * A Human readable version of the Key's top level name. For Biblical
+     * passages this uses short books names. For a dictionary it might return
+     * A-Z.
+     * 
+     * @return a String containing a description of the Key
+     */
+    String getRootName();
 
     /**
      * The OSIS defined reference specification for this Key. When the key is a
@@ -92,11 +90,15 @@ public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializ
     /**
      * Returns false if the receiver is a leaf node and can not have children.
      * Any attempt to add()/remove() will throw
+     * 
+     * @return true if the key can have children
      */
     boolean canHaveChildren();
 
     /**
      * Returns the number of children that this node has. Leaf nodes return 0.
+     * 
+     * @return the number of children for the node
      */
     int getChildCount();
 
@@ -104,8 +106,8 @@ public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializ
      * Returns the number of elements in this set (its cardinality). If this set
      * contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
      * <tt>Integer.MAX_VALUE</tt>.
-     * <p />
-     * This method is potentially expensive, as it often requires cycling through all the keys in the set.
+     * <p>
+     * This method is potentially expensive, as it often requires cycling through all the keys in the set.</p>
      * @return the number of elements in this set (its cardinality).
      */
     int getCardinality();
@@ -177,7 +179,7 @@ public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializ
      * 
      * @param that
      *            The Key to find
-     * @return The index of the key or < 0 if the key is not in the list
+     * @return The index of the key or &lt; 0 if the key is not in the list
      */
     int indexOf(Key that);
 
@@ -205,6 +207,7 @@ public interface Key extends Comparable<Key>, Iterable<Key>, Cloneable, Serializ
      * This needs to be declared here so that it is visible as a method on a
      * derived Key.
      * 
+     * @param obj 
      * @return true if equal
      */
     boolean equals(Object obj);

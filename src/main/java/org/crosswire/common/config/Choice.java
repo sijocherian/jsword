@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/llgpl.html
+ *       http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.config;
@@ -35,13 +34,16 @@ import org.jdom2.Element;
  * <li>provide a GUI editor for itself</li>
  * </ul>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public interface Choice {
     /**
      * String value to associate with the name (key)
+     * 
+     * @param option the option
+     * @param configResources the resource bundle to load
+     * @throws StartupException if startup is not possible
      */
     void init(Element option, ResourceBundle configResources) throws StartupException;
 
@@ -96,6 +98,7 @@ public interface Choice {
      * 
      * @param value
      *            The new value for this Choice
+     * @throws ConfigException if there is a problem with the configuration
      */
     void setString(String value) throws ConfigException;
 

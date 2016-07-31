@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -30,6 +29,7 @@ import org.crosswire.common.crypt.Sapphire;
 import org.crosswire.jsword.JSMsg;
 import org.crosswire.jsword.JSOtherMsg;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.processing.RawTextToXmlProcessor;
 import org.crosswire.jsword.book.sword.state.OpenFileState;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
@@ -47,10 +47,9 @@ import org.slf4j.LoggerFactory;
  * A generic way to read data from disk for later formatting.
  *
  * @param <T> The type of the OpenFileState that this class extends.
- * @author Joe Walker [joe at eireneh dot com]
+ * @author Joe Walker
  * @author DM Smith
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  */
 public abstract class AbstractBackend<T extends OpenFileState> implements StatefulFileBackedBackend<T>, Backend<T> {
 
@@ -73,7 +72,7 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
     /* (non-Javadoc)
      * @see org.crosswire.jsword.book.sword.Backend#getBookMetaData()
      */
-    public SwordBookMetaData getBookMetaData() {
+    public BookMetaData getBookMetaData() {
         return bmd;
     }
 
@@ -81,7 +80,7 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
      * @see org.crosswire.jsword.book.sword.Backend#decipher(byte[])
      */
     public void decipher(byte[] data) {
-        String cipherKeyString = (String) getBookMetaData().getProperty(ConfigEntryType.CIPHER_KEY);
+        String cipherKeyString = getBookMetaData().getProperty(SwordBookMetaData.KEY_CIPHER_KEY);
         if (cipherKeyString != null) {
             Sapphire cipherEngine = new Sapphire(cipherKeyString.getBytes());
             for (int i = 0; i < data.length; i++) {
@@ -123,9 +122,9 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
             state = initState();
             return readRawContent(state, key);
         } catch (IOException e) {
-            throw new BookException("Unable to obtain raw content from backend", e);
+            throw new BookException("Unable to obtain raw content from backend for key='" + key + '\'', e);
         } finally {
-            OpenFileStateManager.release(state);
+            OpenFileStateManager.instance().release(state);
         }
     }
 
@@ -140,7 +139,7 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
         } catch (IOException e) {
             throw new BookException(JSOtherMsg.lookupText("Unable to save {0}.", alias.getOsisID()));
         } finally {
-            OpenFileStateManager.release(state);
+            OpenFileStateManager.instance().release(state);
         }
     }
 
@@ -180,8 +179,10 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
             openFileState = initState();
             switch (this.bmd.getKeyType()) {
                 case LIST:
-                case TREE:
                     readNormalOsis(key, processor, content, openFileState);
+                    break;
+                case TREE:
+                    readNormalOsisSingleKey(key, processor, content, openFileState);
                     break;
                 case VERSE:
                     readPassageOsis(key, processor, content, openFileState);
@@ -192,7 +193,7 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
 
             return content;
         } finally {
-            OpenFileStateManager.release(openFileState);
+            OpenFileStateManager.instance().release(openFileState);
         }
     }
 
@@ -210,6 +211,21 @@ public abstract class AbstractBackend<T extends OpenFileState> implements Statef
                 // failed to process key 'next'
                 throwFailedKeyException(key, next, e);
             }
+        }
+    }
+
+    /**
+     * Avoid using iterator for GenBook TreeKeys which would cause a GenBook nodes children to be appended to their parent 
+     * e.g. the top level page would include the whole book and result in OOM error 
+     */
+    private void readNormalOsisSingleKey(Key key, RawTextToXmlProcessor processor, List<Content> content, T openFileState) throws BookException {
+        String rawText;
+        try {
+            rawText = readRawContent(openFileState, key);
+            processor.postVerse(key, content, rawText);
+        } catch (IOException e) {
+            // failed to process key
+            throwFailedKeyException(key, key, e);
         }
     }
 

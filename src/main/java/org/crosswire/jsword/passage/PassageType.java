@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -25,8 +24,7 @@ import org.crosswire.jsword.versification.Versification;
 /**
  * Types of Passage optimizations.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum PassageType {
@@ -128,7 +126,10 @@ public enum PassageType {
     /**
      * Create an optimized passage
      * 
+     * @param v11n
+     *            the versification to which this reference pertains
      * @param passage
+     * @param basis 
      * @return the optimized passage
      * @throws NoSuchVerseException
      */
@@ -140,13 +141,16 @@ public enum PassageType {
     /**
      * Create an empty, optimized passage
      * 
+     * @param v11n
+     *            the versification to which this reference pertains
      * @return the optimized, empty passage
-     * @throws NoSuchVerseException
      */
     public abstract Passage createEmptyPassage(Versification v11n);
 
     /**
      * Lookup method to convert from a String
+     * @param name 
+     * @return the matching Passage type
      */
     public static PassageType fromString(String name) {
         for (PassageType v : values()) {
@@ -162,6 +166,9 @@ public enum PassageType {
 
     /**
      * Lookup method to convert from an integer
+     * 
+     * @param i 
+     * @return the Passage type from its ordinal value
      */
     public static PassageType fromInteger(int i) {
         for (PassageType v : values()) {
@@ -176,6 +183,8 @@ public enum PassageType {
 
     /**
      * Lookup method to convert from an integer
+     * @param type 
+     * @return the ordinal value for the passage type
      */
     public static int toInteger(PassageType type) {
         return type.ordinal();

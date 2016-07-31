@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -27,13 +26,15 @@ import org.crosswire.jsword.JSOtherMsg;
 /**
  * A read-only wrapper around any writable implementation of Key.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class ReadOnlyKeyList implements Key {
     /**
      * Simple ctor
+     * 
+     * @param keys the keys
+     * @param ignore 
      */
     public ReadOnlyKeyList(Key keys, boolean ignore) {
         this.keys = keys;
@@ -134,17 +135,17 @@ public class ReadOnlyKeyList implements Key {
     }
 
     /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Key#getRootName()
-     */
-    public String getRootName() {
-        return keys.getRootName();
-    }
-
-    /* (non-Javadoc)
      * @see org.crosswire.jsword.passage.Key#getName(org.crosswire.jsword.passage.Key)
      */
     public String getName(Key base) {
         return keys.getName(base);
+    }
+
+    /* (non-Javadoc)
+     * @see org.crosswire.jsword.passage.Key#getRootName()
+     */
+    public String getRootName() {
+        return keys.getRootName();
     }
 
     /* (non-Javadoc)

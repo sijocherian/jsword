@@ -8,26 +8,25 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2012 - 2014
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2012 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
-
-import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
 import org.crosswire.common.util.IOUtil;
+import org.crosswire.common.util.IniSection;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.state.RawFileBackendState;
 import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.Verse;
@@ -36,6 +35,7 @@ import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,8 +43,7 @@ import org.junit.Test;
 /**
  * A Raw File format that allows for each verse to have it's own storage.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author mbergmann
  * @author DM Smith
  */
@@ -52,7 +51,7 @@ public class RawFileBackendTest {
 
     private final String modName = "TestComment";
     private File configFile = new File("testconfig.conf");
-    private RawFileBackend backend = null;
+    private RawFileBackend backend;
     private Versification v11n;
 
     @BeforeClass
@@ -66,20 +65,21 @@ public class RawFileBackendTest {
     @Before
     public void setUp() throws Exception {
         // AV11N(DMS): Update test to test all V11Ns
-        v11n = Versifications.instance().getDefaultVersification();
-        ConfigEntryTable table = new ConfigEntryTable(modName);
-        table.add(ConfigEntryType.LANG, "de");
-        table.add(ConfigEntryType.INITIALS, modName);
-        table.add(ConfigEntryType.DESCRIPTION, "MyNewBook");
-        table.add(ConfigEntryType.MOD_DRV, "RawFiles");
-        table.add(ConfigEntryType.DATA_PATH, "test");
+        v11n = Versifications.instance().getVersification("KJV");
+        IniSection table = new IniSection(modName);
+        table.add(BookMetaData.KEY_LANG, "de");
+        table.add(SwordBookMetaData.KEY_DESCRIPTION, "MyNewBook");
+        table.add(SwordBookMetaData.KEY_MOD_DRV, "RawFiles");
+        table.add(SwordBookMetaData.KEY_DATA_PATH, "test");
+        table.add(SwordBookMetaData.KEY_ENCODING, "UTF-8");
         try {
-            table.save(configFile);
+            table.save(configFile, "UTF-8");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        SwordBookMetaData swordBookMetaData = new SwordBookMetaData(configFile, modName, new URI("file:///tmp"));
+        SwordBookMetaData swordBookMetaData = new SwordBookMetaData(configFile, new URI("file:///tmp"));
+        v11n = Versifications.instance().getVersification(swordBookMetaData.getProperty(BookMetaData.KEY_VERSIFICATION));
         backend = new RawFileBackend(swordBookMetaData, 2);
         backend.create();
     }
@@ -113,14 +113,14 @@ public class RawFileBackendTest {
             backend.setRawText(state, ntVerse3, "Hello NT3");
             backend.setRawText(state, ntVerse4, "Hello NT4");
 
-            assertEquals("Hello OT", backend.getRawText(state, otVerse));
-            assertEquals("Hello OT2", backend.getRawText(state, otVerse2));
-            assertEquals("Hello OT3", backend.getRawText(state, otVerse3));
-            assertEquals("Hello OT4", backend.getRawText(state, otVerse4));
-            assertEquals("Hello NT", backend.getRawText(state, ntVerse));
-            assertEquals("Hello NT2", backend.getRawText(state, ntVerse2));
-            assertEquals("Hello NT3", backend.getRawText(state, ntVerse3));
-            assertEquals("Hello NT4", backend.getRawText(state, ntVerse4));
+            Assert.assertEquals("Hello OT", backend.getRawText(state, otVerse));
+            Assert.assertEquals("Hello OT2", backend.getRawText(state, otVerse2));
+            Assert.assertEquals("Hello OT3", backend.getRawText(state, otVerse3));
+            Assert.assertEquals("Hello OT4", backend.getRawText(state, otVerse4));
+            Assert.assertEquals("Hello NT", backend.getRawText(state, ntVerse));
+            Assert.assertEquals("Hello NT2", backend.getRawText(state, ntVerse2));
+            Assert.assertEquals("Hello NT3", backend.getRawText(state, ntVerse3));
+            Assert.assertEquals("Hello NT4", backend.getRawText(state, ntVerse4));
         } finally {
             IOUtil.close(state);
         }
@@ -145,9 +145,9 @@ public class RawFileBackendTest {
             backend.setAliasKey(state, alias1, source);
             backend.setAliasKey(state, alias2, source);
 
-            assertEquals("Hello Alias test!", backend.getRawText(state, source));
-            assertEquals("Hello Alias test!", backend.getRawText(state, alias1));
-            assertEquals("Hello Alias test!", backend.getRawText(state, alias2));
+            Assert.assertEquals("Hello Alias test!", backend.getRawText(state, source));
+            Assert.assertEquals("Hello Alias test!", backend.getRawText(state, alias1));
+            Assert.assertEquals("Hello Alias test!", backend.getRawText(state, alias2));
         } finally {
             IOUtil.close(state);
         }

@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.install;
@@ -42,9 +41,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A manager to abstract out the non-view specific book installation tasks.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class InstallManager {
@@ -115,6 +113,8 @@ public final class InstallManager {
 
     /**
      * The names of all the known InstallerFactories
+     * 
+     * @return the set of all installer factory names
      */
     public Set<String> getInstallerFactoryNames() {
         return Collections.unmodifiableSet(factories.keySet());
@@ -124,6 +124,9 @@ public final class InstallManager {
      * Find the registered name of the InstallerFactory that created the given
      * installer. There isn't a nice way to do this right now so we just do a
      * trawl through all the known factories looking!
+     * 
+     * @param installer the installer
+     * @return the name of the factory for the installer
      */
     public String getFactoryNameForInstaller(Installer installer) {
         Class<? extends Installer> match = installer.getClass();
@@ -150,6 +153,9 @@ public final class InstallManager {
      * Find the registered name of the Installer. There isn't a nice way to do
      * this right now so we just do a trawl through all the known factories
      * looking!
+     * 
+     * @param installer the installer
+     * @return the name of the installer
      */
     public String getInstallerNameForInstaller(Installer installer) {
         for (String name : installers.keySet()) {
@@ -188,6 +194,7 @@ public final class InstallManager {
 
     /**
      * Accessor for the known installers
+     * @return a map of named installers
      */
     public Map<String, Installer> getInstallers() {
         return Collections.unmodifiableMap(installers);

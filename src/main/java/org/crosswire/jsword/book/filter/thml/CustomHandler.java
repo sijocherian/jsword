@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.filter.thml;
@@ -43,13 +42,15 @@ import org.xml.sax.helpers.DefaultHandler;
  * <a href="http://www.ccel.org/ThML/ThML1.04.htm">http://www.ccel.org/ThML/ThML1.04.htm</a>
  * to work out what the tags meant.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class CustomHandler extends DefaultHandler {
     /**
      * Simple ctor
+     * 
+     * @param book the book
+     * @param key the key
      */
     public CustomHandler(Book book, Key key) {
         this.book = book;
@@ -57,6 +58,9 @@ public class CustomHandler extends DefaultHandler {
         this.stack = new LinkedList<Content>();
     }
 
+    /* (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     */
     @Override
     public void startElement(String uri, String localname, String qname, Attributes attrs) throws SAXException {
         Element ele = null;
@@ -85,6 +89,9 @@ public class CustomHandler extends DefaultHandler {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
+     */
     @Override
     public void characters(char[] data, int offset, int length) {
         // what we are adding
@@ -130,6 +137,9 @@ public class CustomHandler extends DefaultHandler {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+     */
     @Override
     public void endElement(String uri, String localname, String qname) {
         if (stack.isEmpty()) {
@@ -154,6 +164,9 @@ public class CustomHandler extends DefaultHandler {
         }
     }
 
+    /**
+     * @return the root element
+     */
     public Element getRootElement() {
         return rootElement;
     }
@@ -184,7 +197,7 @@ public class CustomHandler extends DefaultHandler {
                 return t;
             }
 
-            DataPolice.report(book, key, "Wrong case used in thml element: " + name);
+            // DataPolice.report(book, key, "Wrong case used in thml element: " + name);
         }
         return t;
     }
@@ -222,28 +235,37 @@ public class CustomHandler extends DefaultHandler {
          */
         Tag[] tags = new Tag[] {
                 // The following are defined in Voyager xhtml 4.0
-                new ATag(), new AbbrTag(), new AliasTag("acronym", new AbbrTag()),
+                new ATag(),
+                new AbbrTag(),
+                new AliasTag("acronym", new AbbrTag()),
                 new AnonymousTag("address"),
                 new SkipTag("applet"),
                 new SkipTag("area"),
-                new BTag(), new SkipTag("base"),
+                new BTag(),
+                new SkipTag("base"),
                 new SkipTag("basefont"),
                 new IgnoreTag("bdo"),
-                new BigTag(), new BlockquoteTag(), new IgnoreTag("body"),
-                new BrTag(), new SkipTag("button"),
+                new BigTag(),
+                new BlockquoteTag(),
+                new IgnoreTag("body"),
+                new BrTag(),
+                new SkipTag("button"),
                 new AnonymousTag("caption"),
-                new CenterTag(), new AnonymousTag("cite"),
+                new CenterTag(),
+                new AnonymousTag("cite"),
                 new AnonymousTag("code"),
                 new SkipTag("col"),
                 new SkipTag("colgroup"),
                 new AliasTag("dd", new LiTag()),
                 new AnonymousTag("del"),
                 new AnonymousTag("dfn"),
-                new DivTag(), new AliasTag("dl", new UlTag()),
+                new DivTag(),
+                new AliasTag("dl", new UlTag()),
                 new AliasTag("dt", new LiTag()),
                 new AliasTag("em", new ITag()),
                 new IgnoreTag("fieldset"),
-                new FontTag(), new SkipTag("form"),
+                new FontTag(),
+                new SkipTag("form"),
                 new SkipTag("frame"),
                 new SkipTag("frameset"),
                 new AliasTag("h1", new HTag(1)),
@@ -253,35 +275,55 @@ public class CustomHandler extends DefaultHandler {
                 new AliasTag("h5", new HTag(5)),
                 new AliasTag("h6", new HTag(6)),
                 new SkipTag("head"),
-                new HrTag(), new IgnoreTag("html"),
+                new HrTag(),
+                new IgnoreTag("html"),
                 new IgnoreTag("frameset"),
-                new ITag(), new SkipTag("iframe"),
-                new ImgTag(), new SkipTag("input"),
+                new ITag(),
+                new SkipTag("iframe"),
+                new ImgTag(),
+                new SkipTag("input"),
                 new AnonymousTag("ins"),
                 new AnonymousTag("kbd"),
                 new AnonymousTag("label"),
                 new AnonymousTag("legend"),
-                new LiTag(), new SkipTag("link"),
+                new LiTag(),
+                new SkipTag("link"),
                 new SkipTag("map"),
                 new SkipTag("meta"),
                 new SkipTag("noscript"),
                 new SkipTag("object"),
-                new OlTag(), new SkipTag("optgroup"),
+                new OlTag(),
+                new SkipTag("optgroup"),
                 new SkipTag("option"),
-                new PTag(), new SkipTag("param"),
+                new PTag(),
+                new SkipTag("param"),
                 new IgnoreTag("pre"),
-                new QTag(), new RootTag(), new STag(), new AnonymousTag("samp"),
+                new QTag(),
+                new RootTag(),
+                new STag(),
+                new AnonymousTag("samp"),
                 new SkipTag("script"),
                 new SkipTag("select"),
-                new SmallTag(), new IgnoreTag("span"),
+                new SmallTag(),
+                new IgnoreTag("span"),
                 new AliasTag("strong", new BTag()),
                 new SkipTag("style"),
-                new SubTag(), new SupTag(), new SyncTag(), new TableTag(), new IgnoreTag("tbody"),
-                new TdTag(), new IgnoreTag("tfoot"),
+                new SubTag(),
+                new SupTag(),
+                new SyncTag(),
+                new TableTag(),
+                new IgnoreTag("tbody"),
+                new TdTag(),
+                new IgnoreTag("tfoot"),
                 new SkipTag("textarea"),
                 new SkipTag("title"),
                 new IgnoreTag("thead"),
-                new ThTag(), new TrTag(), new TtTag(), new UTag(), new UlTag(), new AnonymousTag("var"),
+                new ThTag(),
+                new TrTag(),
+                new TtTag(),
+                new UTag(),
+                new UlTag(),
+                new AnonymousTag("var"),
 
                 // ThML adds the following to Voyager
                 // Note: hymn.mod is not here nor are additional head&DC
@@ -289,7 +331,8 @@ public class CustomHandler extends DefaultHandler {
                 new AnonymousTag("added"),
                 new AnonymousTag("attr"),
                 new AnonymousTag("argument"),
-                new CitationTag(), new AnonymousTag("date"),
+                new CitationTag(),
+                new AnonymousTag("date"),
                 new AnonymousTag("deleted"),
                 new AnonymousTag("def"),
                 new AliasTag("div1", new DivTag(1)),
@@ -298,12 +341,19 @@ public class CustomHandler extends DefaultHandler {
                 new AliasTag("div4", new DivTag(4)),
                 new AliasTag("div5", new DivTag(5)),
                 new AliasTag("div6", new DivTag(6)),
-                new ForeignTag(), new AnonymousTag("index"),
+                new ForeignTag(),
+                new AnonymousTag("index"),
                 new AnonymousTag("insertIndex"),
                 new AnonymousTag("glossary"),
-                new NoteTag(), new NameTag(), new PbTag(), new AnonymousTag("scripCom"),
+                new NoteTag(),
+                new NameTag(),
+                new PbTag(),
+                new AnonymousTag("scripCom"),
                 new AnonymousTag("scripContext"),
-                new ScripRefTag(), new ScriptureTag(), new TermTag(), new AnonymousTag("unclear"),
+                new ScripRefTag(),
+                new ScriptureTag(),
+                new TermTag(),
+                new AnonymousTag("unclear"),
                 new VerseTag(),
         };
         for (int i = 0; i < tags.length; i++) {

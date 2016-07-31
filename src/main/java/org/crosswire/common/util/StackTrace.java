@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -31,9 +30,8 @@ import java.util.NoSuchElementException;
  * exceptions print their stack traces, however it is probably a safe enough
  * assumption for the moment.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public final class StackTrace {
     /**
@@ -56,14 +54,14 @@ public final class StackTrace {
     /**
      * Create a stack trace of the code at this point
      * 
-     * @param ex
+     * @param exception
      *            The Throwable containing the Stack Trace
      * @param discard
      *            The number of uppermost stack frames to ignore
      */
-    private void init(Throwable ex, int discard) {
+    private void init(Throwable exception, int discard) {
         StringWriter sout = new StringWriter();
-        ex.printStackTrace(new PrintWriter(sout));
+        exception.printStackTrace(new PrintWriter(sout));
         String msg = new String(sout.getBuffer());
         String[] calls = StringUtil.split(msg, "\n\r");
 
@@ -107,9 +105,9 @@ public final class StackTrace {
                     }
                     j++;
                 }
-            } catch (NumberFormatException ex2) {
+            } catch (NumberFormatException ex) {
                 oops = true;
-            } catch (StringIndexOutOfBoundsException ex2) {
+            } catch (StringIndexOutOfBoundsException ex) {
                 // For whatever reason, Java 7 under Web Start is throwing this on
                 // call.substring(spcIndex + 1, lhsIndex) with a -56 being passed.
                 oops = true;
@@ -126,6 +124,8 @@ public final class StackTrace {
 
     /**
      * How many stack elements are there?
+     * 
+     * @return the number of stack elements
      */
     public int countStackElements() {
         return methodNames.length;
@@ -136,6 +136,7 @@ public final class StackTrace {
      * 
      * @param level
      *            Number of calling function
+     * @return the function name
      */
     public String getFunctionName(int level) {
         return methodNames[level];
@@ -146,6 +147,7 @@ public final class StackTrace {
      * 
      * @param level
      *            Number of calling function
+     * @return the full function name
      */
     public String getFullFunctionName(int level) {
         return classNames[level] + '.' + methodNames[level] + "()";
@@ -156,6 +158,7 @@ public final class StackTrace {
      * 
      * @param level
      *            Number of calling function
+     * @return the class name
      */
     public String getClassName(int level) {
         return classNames[level];
@@ -166,6 +169,7 @@ public final class StackTrace {
      * 
      * @param level
      *            Number of calling function
+     * @return the file name
      */
     public String getFileName(int level) {
         return fileNames[level];
@@ -176,11 +180,17 @@ public final class StackTrace {
      * 
      * @param level
      *            Number of calling function
+     * @return the line number
      */
     public int getLineNumber(int level) {
         return lineNumbers[level];
     }
 
+    /**
+     * Get the count of classes
+     * 
+     * @return the number of classes
+     */
     public int getClassCount() {
         return classNames.length;
     }
@@ -190,6 +200,7 @@ public final class StackTrace {
      * 
      * @param level
      *            Number of calling function
+     * @return the function owner
      */
     public Class<?> getClass(int level) {
         try {
@@ -202,6 +213,7 @@ public final class StackTrace {
 
     /**
      * Base class for the real enumeration implementations below
+     * @param <T> the type of the object in the stack
      */
     public abstract class AbstractStackIterator<T> implements Iterator<T> {
         /* (non-Javadoc)
@@ -219,7 +231,8 @@ public final class StackTrace {
         }
 
         /**
-         * @return Returns the level.
+         * @return the level.
+         * @throws NoSuchElementException 
          */
         public int getAndIncrementLevel() throws NoSuchElementException {
             return level++;
@@ -233,6 +246,8 @@ public final class StackTrace {
 
     /**
      * To iterate over the class names
+     * 
+     * @return an iterator of class names
      */
     public Iterator<String> getClassNameElements() {
         return new AbstractStackIterator<String>() {
@@ -247,6 +262,8 @@ public final class StackTrace {
 
     /**
      * To iterate over the function names
+     * 
+     * @return an iterator of function names
      */
     public Iterator<String> getFunctionNameElements() {
         return new AbstractStackIterator<String>() {
@@ -261,6 +278,8 @@ public final class StackTrace {
 
     /**
      * To iterate over the full function names
+     * 
+     * @return an iterator of full function names
      */
     public Iterator<String> getFullFunctionNameElements() {
         return new AbstractStackIterator<String>() {

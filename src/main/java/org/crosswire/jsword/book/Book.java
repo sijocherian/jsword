@@ -8,20 +8,19 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Set;
 
 import org.crosswire.common.activate.Activatable;
 import org.crosswire.common.util.Language;
@@ -38,9 +37,8 @@ import org.jdom2.Document;
  * an XML document or as plain text - It uses Keys to refer to parts of itself,
  * and can search for words (returning Keys).
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public interface Book extends Activatable, Comparable<Book> {
     /**
@@ -55,9 +53,20 @@ public interface Book extends Activatable, Comparable<Book> {
     Key getGlobalKeyList();
 
     /**
+     * Get a complete list of entries. Create a Key that encompasses all
+     * of the existing entries in the book. For most modules this will be the
+     * same as {@link #getGlobalKeyList}, however for a Bible, it will
+     * get the references that are actually in the book.
+     * 
+     * @return A Key that includes all of the existing Keys
+     */
+    Key getScope();
+
+    /**
      * Get a Key for the name, if possible. Otherwise return an empty Key.
      * 
      * @param name
+     *            The string to translate into a Key
      * @return a valid key.
      */
     Key getValidKey(String name);
@@ -96,6 +105,8 @@ public interface Book extends Activatable, Comparable<Book> {
 
     /**
      * Set the meta-information for this book.
+     * 
+     * @param bmd the BookMetaData that describes this book.
      */
     void setBookMetaData(BookMetaData bmd);
 
@@ -106,8 +117,13 @@ public interface Book extends Activatable, Comparable<Book> {
      *            the Items to locate
      * @param allowEmpty
      *            indicates whether empty keys should be present.
+     * @param allowGenTitles
+     *            indicates whether to generate titles
+     * @return an iterator over the OSIS Content
+     * @throws BookException
+     *             If anything goes wrong with this method
      */
-    Iterator<Content> getOsisIterator(Key key, boolean allowEmpty) throws BookException;
+    Iterator<Content> getOsisIterator(Key key, boolean allowEmpty, boolean allowGenTitles) throws BookException;
 
     /**
      * Returns <tt>true</tt> if this book contains the specified element.
@@ -183,6 +199,7 @@ public interface Book extends Activatable, Comparable<Book> {
      * 
      * @param request
      *            The search spec.
+     * @return the key that matches the search or null
      * @throws BookException
      *             If anything goes wrong with this method
      */
@@ -194,6 +211,7 @@ public interface Book extends Activatable, Comparable<Book> {
      * 
      * @param request
      *            The search spec.
+     * @return the key that matches the search or null
      * @throws BookException
      *             If anything goes wrong with this method
      */
@@ -222,6 +240,8 @@ public interface Book extends Activatable, Comparable<Book> {
      * Accessor for the driver that runs this Book. Note this method should only
      * be used to delete() Books. Everything else you should want to do to a
      * Book should be available in other ways.
+     * 
+     * @return the book's driver
      */
     BookDriver getDriver();
 
@@ -233,10 +253,17 @@ public interface Book extends Activatable, Comparable<Book> {
     Language getLanguage();
 
     /**
-     * The initials of this book - how people familiar with this book will know
+     * The abbreviation of this book - how people familiar with this book will know
      * it, for example "NIV", "KJV".
      * 
      * @return The book's initials
+     */
+    String getAbbreviation();
+
+    /**
+     * The internal name of this book.
+     * 
+     * @return The book's internal name
      */
     String getInitials();
 
@@ -245,7 +272,7 @@ public interface Book extends Activatable, Comparable<Book> {
      * and the Work.setOsisWork() methods. The response will generally be of the
      * form [Bible][Dict..].getInitials
      * 
-     * @return The osis id of this book
+     * @return The OSIS id of this book
      */
     String getOsisID();
 
@@ -253,7 +280,7 @@ public interface Book extends Activatable, Comparable<Book> {
      * Return the likelihood that we have a match. This allows for calling the
      * book different things and still be found.
      * 
-     * @param name
+     * @param name one of many ways to name this book.
      * @return true if we have a match.
      */
     boolean match(String name);
@@ -279,7 +306,7 @@ public interface Book extends Activatable, Comparable<Book> {
 
     /**
      * Indicate whether this book is enciphered and without a key. Since the
-     * expectation is that most books are unenciphered, abstract implementations
+     * expectation is that most books are not encrypted, abstract implementations
      * should return false and let specific implementations return true
      * otherwise.
      * 
@@ -335,6 +362,9 @@ public interface Book extends Activatable, Comparable<Book> {
 
     /**
      * Return whether the feature is supported by the book.
+     * 
+     * @param feature the type of the Feature to check
+     * @return whether the feature is supported
      */
     boolean hasFeature(FeatureType feature);
 
@@ -342,27 +372,43 @@ public interface Book extends Activatable, Comparable<Book> {
      * Get a list of all the properties available to do with this Book. The
      * returned Properties will be read-only so any attempts to alter it will
      * fail.
+     * 
+     * @return the read-only properties for this book.
      */
-    Map<String, Object> getProperties();
+    Set<String> getPropertyKeys();
 
     /**
+     * Retrieve a single property for this book.
+     * 
      * @param key
      *            the key of the property.
      * @return the value of the property
      */
-    Object getProperty(String key);
+    String getProperty(String key);
 
     /**
+     * Set a property for this book.
+     * 
      * @param key
      *            the key of the property.
      * @param value
      *            the value of the property
      */
-    void putProperty(String key, Object value);
+    void putProperty(String key, String value);
+
+    /**
+     * Saves an entry to a particular configuration file.
+     * 
+     * @param key the entry that we are saving
+     * @param value the value of the entry
+     * @param forFrontend when {@code true} save to front end storage, else in shared storage
+     */
+    void putProperty(String key, String value, boolean forFrontend);
 
     /**
      * Has anyone generated a search index for this Book?
      * 
+     * @return the status of the index for this book.
      * @see org.crosswire.jsword.index.IndexManager
      */
     IndexStatus getIndexStatus();
@@ -371,12 +417,15 @@ public interface Book extends Activatable, Comparable<Book> {
      * This method does not alter the index status, however it is for Indexers
      * that are responsible for indexing and have changed the status themselves.
      * 
+     * @param status the status to set for this book
      * @see org.crosswire.jsword.index.IndexManager
      */
     void setIndexStatus(IndexStatus status);
 
     /**
      * Get an OSIS representation of information concerning this Book.
+     * 
+     * @return information for this book represented as OSIS
      */
     Document toOSIS();
 

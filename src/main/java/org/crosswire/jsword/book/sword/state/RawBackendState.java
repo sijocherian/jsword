@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2013 - 2016
  *
  */
 package org.crosswire.jsword.book.sword.state;
@@ -31,7 +30,7 @@ import org.crosswire.common.util.NetUtil;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.jsword.JSOtherMsg;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.sword.SwordBookMetaData;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.SwordConstants;
 import org.crosswire.jsword.book.sword.SwordUtil;
 import org.crosswire.jsword.versification.Testament;
@@ -44,8 +43,7 @@ import org.slf4j.LoggerFactory;
  * The caller is required to close to correctly free resources and avoid File
  * pointer leaks
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class RawBackendState extends AbstractOpenFileState {
@@ -59,8 +57,8 @@ public class RawBackendState extends AbstractOpenFileState {
      * @param bookMetaData
      *            the appropriate metadata for the book
      */
-    RawBackendState(SwordBookMetaData bookMetaData) throws BookException {
-        this.bookMetaData = bookMetaData;
+    RawBackendState(BookMetaData bookMetaData) throws BookException {
+        super(bookMetaData);
         URI path = SwordUtil.getExpandedDataPath(bookMetaData);
 
         URI otPath = NetUtil.lengthenURI(path, File.separator + SwordConstants.FILE_OT);
@@ -93,7 +91,7 @@ public class RawBackendState extends AbstractOpenFileState {
 
                 assert false : ex;
 
-                log.error("Could not open OT", ex);
+                LOGGER.error("Could not open OT", ex);
                 ntIdxRaf = null;
                 ntTextRaf = null;
             }
@@ -109,7 +107,7 @@ public class RawBackendState extends AbstractOpenFileState {
                 IOUtil.close(ntTextRaf);
 
                 assert false : ex;
-                log.error("Could not open NT", ex);
+                LOGGER.error("Could not open NT", ex);
                 ntIdxRaf = null;
                 ntTextRaf = null;
             }
@@ -198,13 +196,6 @@ public class RawBackendState extends AbstractOpenFileState {
         return testament == Testament.NEW ? ntIdxFile : otIdxFile;
     }
 
-    /**
-     * @return the bookMetaData
-     */
-    public SwordBookMetaData getBookMetaData() {
-        return bookMetaData;
-    }
-
     protected RandomAccessFile otIdxRaf;
     protected RandomAccessFile ntIdxRaf;
     protected RandomAccessFile otTextRaf;
@@ -214,10 +205,8 @@ public class RawBackendState extends AbstractOpenFileState {
     protected File otIdxFile;
     protected File otTextFile;
 
-    private SwordBookMetaData bookMetaData;
-
     /**
      * The log stream
      */
-    private static final Logger log = LoggerFactory.getLogger(RawBackendState.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RawBackendState.class);
 }

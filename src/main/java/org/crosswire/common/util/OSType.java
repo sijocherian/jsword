@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -26,8 +25,7 @@ import java.net.URI;
 /**
  * Types of Operating Systems for which specialized behavior is needed.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public enum OSType {
@@ -69,8 +67,10 @@ public enum OSType {
 
     /**
      * Simple ctor
+     * 
+     * @param name the name of the OS
      */
-    private OSType(String name) {
+    OSType(String name) {
         this.name = name;
     }
 
@@ -94,6 +94,9 @@ public enum OSType {
      */
     public abstract URI getUserAreaFolder(String hiddenFolderName, String visibleFolderName);
 
+    /**
+     * @return the URI of the user home
+     */
     public static URI getUserHome() {
         return NetUtil.getURI(new File(System.getProperty("user.home")));
     }
@@ -108,7 +111,10 @@ public enum OSType {
     }
 
     /**
-     * Lookup method to convert from a String
+     * Lookup method to convert from a String to an OSType
+     * 
+     * @param name the name of an OSType
+     * @return the OSType or DEFAULT
      */
     public static OSType fromString(String name) {
         for (OSType v : values()) {
@@ -120,10 +126,8 @@ public enum OSType {
         return DEFAULT;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
+    /* (non-Javadoc)
+     * @see java.lang.Enum#toString()
      */
     @Override
     public String toString() {

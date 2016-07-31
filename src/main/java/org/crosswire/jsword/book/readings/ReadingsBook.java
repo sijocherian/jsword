@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.readings;
@@ -61,13 +60,15 @@ import org.slf4j.LoggerFactory;
 /**
  * A Dictionary that displays daily Readings.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class ReadingsBook extends AbstractBook implements PreferredKey {
     /**
      * Constructor for ReadingsBook.
+     * @param driver the driver for this book
+     * @param setname the name of this book
+     * @param type the type of book
      */
     public ReadingsBook(ReadingsBookDriver driver, String setname, BookCategory type) {
         super(null, null); // set the book metadata later and no backend
@@ -122,7 +123,7 @@ public class ReadingsBook extends AbstractBook implements PreferredKey {
         return new ReadingsKey(new Date());
     }
 
-    public Iterator<Content> getOsisIterator(Key key, boolean allowEmpty) throws BookException {
+    public Iterator<Content> getOsisIterator(final Key key, final boolean allowEmpty, final boolean allowGenTitles) throws BookException {
         if (!(key instanceof ReadingsKey)) {
             // TRANSLATOR: Error condition: Indicates that something could not be found in the book. {0} is a placeholder for the unknown key.
             throw new BookException(JSMsg.gettext("Key not found {0}", key.getName()));

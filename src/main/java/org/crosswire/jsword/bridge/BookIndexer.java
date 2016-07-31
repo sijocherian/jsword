@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.jsword.bridge;
@@ -33,8 +32,7 @@ import org.crosswire.jsword.index.IndexStatusListener;
  * BookIndexer allows one to check the status of an index, build an index or
  * delete an index. This is similar to SWORD's mkfastmod.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class BookIndexer {
@@ -62,7 +60,7 @@ public class BookIndexer {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    // ok to be interrupted
+                    // This is allowed
                 }
             }
             book.removeIndexStatusListener(isl);
@@ -86,7 +84,7 @@ public class BookIndexer {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    // ok to be interrupted
+                    // This is allowed
                 }
             }
             book.removeIndexStatusListener(isl);

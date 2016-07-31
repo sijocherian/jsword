@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -29,9 +28,8 @@ import org.crosswire.jsword.book.KeyType;
 /**
  * Data about book types.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public enum BookType {
@@ -62,7 +60,7 @@ public enum BookType {
 
         @Override
         protected Backend getBackend(SwordBookMetaData sbmd) throws BookException {
-            BlockType blockType = BlockType.fromString((String) sbmd.getProperty(ConfigEntryType.BLOCK_TYPE));
+            BlockType blockType = BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE));
             return new ZVerseBackend(sbmd, blockType);
         }
     },
@@ -108,7 +106,7 @@ public enum BookType {
 
         @Override
         protected Backend getBackend(SwordBookMetaData sbmd) throws BookException {
-            BlockType blockType = BlockType.fromString((String) sbmd.getProperty(ConfigEntryType.BLOCK_TYPE));
+            BlockType blockType = BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE));
             return new ZVerseBackend(sbmd, blockType);
         }
     },
@@ -221,7 +219,7 @@ public enum BookType {
     /**
      * Simple ctor
      */
-    private BookType(String name, BookCategory category, KeyType type) {
+    BookType(String name, BookCategory category, KeyType type) {
         this.name = name;
         this.category = category;
         this.keyType = type;
@@ -246,6 +244,8 @@ public enum BookType {
 
     /**
      * The category of this book
+     * 
+     * @return the category of this book
      */
     public BookCategory getBookCategory() {
         return category;
@@ -275,6 +275,8 @@ public enum BookType {
     /**
      * Create a Book appropriate for the BookMetaData
      * 
+     * @param sbmd the book metadata 
+     * @return a book for that metadata
      * @throws BookException
      */
     public Book createBook(SwordBookMetaData sbmd) throws BookException {
@@ -308,6 +310,9 @@ public enum BookType {
 
     /**
      * Lookup method to convert from a String
+     * 
+     * @param name the string representation of a book type
+     * @return the matching book type
      */
     public static BookType fromString(String name) {
         for (BookType v : values()) {

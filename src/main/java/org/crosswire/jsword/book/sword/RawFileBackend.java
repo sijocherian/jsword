@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2009-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2009 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
 import org.crosswire.jsword.book.sword.state.RawBackendState;
 import org.crosswire.jsword.book.sword.state.RawFileBackendState;
@@ -61,8 +61,7 @@ import org.slf4j.LoggerFactory;
  * character name that is stored in a dat file.</li>
  * </ul>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author mbergmann
  * @author DM Smith
  */
@@ -74,7 +73,7 @@ public class RawFileBackend extends RawBackend<RawFileBackendState> {
 
     @Override
     public RawFileBackendState initState() throws BookException {
-        return OpenFileStateManager.getRawFileBackendState(getBookMetaData());
+        return OpenFileStateManager.instance().getRawFileBackendState(getBookMetaData());
     }
 
     /* (non-Javadoc)
@@ -114,7 +113,7 @@ public class RawFileBackend extends RawBackend<RawFileBackendState> {
      */
     public void setRawText(RawFileBackendState state, Key key, String text) throws BookException, IOException {
 
-        String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+        String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         Versification v11n = Versifications.instance().getVersification(v11nName);
         Verse verse = KeyUtil.getVerse(key);
         int index = verse.getOrdinal();
@@ -142,7 +141,7 @@ public class RawFileBackend extends RawBackend<RawFileBackendState> {
     }
 
     public void setAliasKey(RawFileBackendState state, Key alias, Key source) throws IOException {
-        String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+        String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         Versification v11n = Versifications.instance().getVersification(v11nName);
         Verse aliasVerse = KeyUtil.getVerse(alias);
         Verse sourceVerse = KeyUtil.getVerse(source);
@@ -279,7 +278,7 @@ public class RawFileBackend extends RawBackend<RawFileBackendState> {
             prepopulateIndexFiles(state);
             prepopulateIncfile(state);
         } finally {
-            OpenFileStateManager.release(state);
+            OpenFileStateManager.instance().release(state);
         }
     }
 
@@ -312,7 +311,7 @@ public class RawFileBackend extends RawBackend<RawFileBackendState> {
 
     private void prepopulateIndexFiles(RawFileBackendState state) throws IOException {
 
-        String v11nName = getBookMetaData().getProperty(ConfigEntryType.VERSIFICATION).toString();
+        String v11nName = getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         Versification v11n = Versifications.instance().getVersification(v11nName);
         int otCount = v11n.getCount(Testament.OLD);
         int ntCount = v11n.getCount(Testament.NEW) + 1;

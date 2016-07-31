@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 /*
@@ -51,13 +50,17 @@ import org.xml.sax.XMLReader;
 /**
  * A set of useful XML Features
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class XMLFeatureSet {
 
+    /**
+     * An XMLFeatureSet with default settings.
+     */
     public XMLFeatureSet() {
+        features = new TreeMap<String, XMLFeatureState>();
+        states = new TreeMap<XMLFeature, String>();
         features.put("n", new XMLFeatureState(XMLFeature.NAMESPACES, true));
         features.put("np", new XMLFeatureState(XMLFeature.NAMESPACE_PREFIX));
         features.put("v", new XMLFeatureState(XMLFeature.VALIDATION));
@@ -75,10 +78,22 @@ public final class XMLFeatureSet {
         }
     }
 
+    /**
+     * Set the state of an XMLFeture in this set.
+     * 
+     * @param feature the XMLFeature to set
+     * @param state whether the feature is on or off
+     */
     public void setFeatureState(XMLFeature feature, boolean state) {
         features.get(states.get(feature)).setState(state);
     }
 
+    /**
+     * Allow for XMLFeatures to be set from command line.
+     * 
+     * @param argv the specification of XMLFeatures to turn on or off
+     * @see #printUsage See printUsage for details
+     */
     public void setFeatureStates(String[] argv) {
         // process arguments
         for (int i = 0; i < argv.length; i++) {
@@ -94,6 +109,9 @@ public final class XMLFeatureSet {
         }
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
@@ -104,7 +122,9 @@ public final class XMLFeatureSet {
         return buf.toString();
     }
 
-    /** Prints the usage. */
+    /**
+     * Prints the usage.
+     */
     public void printUsage() {
         System.err.println("XML Feature Set options:");
         System.err.println("  -n  | -N    Turn on/off namespace processing.");
@@ -129,6 +149,11 @@ public final class XMLFeatureSet {
         System.err.println("              NOTE: Requires use of -xi and not supported by all parsers.");
     }
 
+    /**
+     * Set this XMLFeatureSets state onto an XMLReader.
+     * 
+     * @param parser the XMLReader
+     */
     public void setFeatures(XMLReader parser) {
         for (XMLFeatureState state : features.values()) {
             state.setFeature(parser);
@@ -139,12 +164,22 @@ public final class XMLFeatureSet {
      * A holder of the boolean state for a feature.
      */
     private static class XMLFeatureState {
-        public XMLFeatureState(XMLFeature feature, boolean state) {
+        /**
+         * Bind a state to an XMLFeature.
+         * 
+         * @param feature the XMLFeature
+         * @param state whether that XMLFeature is on or off
+         */
+        XMLFeatureState(XMLFeature feature, boolean state) {
             this.feature = feature;
             this.state = state;
         }
 
-        public XMLFeatureState(XMLFeature feature) {
+        /**
+         * An XMLFeature that is turned off.
+         * @param feature the XMLFeature
+         */
+        XMLFeatureState(XMLFeature feature) {
             this(feature, false);
         }
 
@@ -158,7 +193,7 @@ public final class XMLFeatureSet {
         /**
          * Set the new state
          * 
-         * @param newState
+         * @param newState whether the feature is on or off
          */
         public void setState(boolean newState) {
             state = newState;
@@ -167,7 +202,7 @@ public final class XMLFeatureSet {
         /**
          * Set the control state on the parser.
          * 
-         * @param parser
+         * @param parser The parser on which to set this feature
          */
         public void setFeature(XMLReader parser) {
             String control = feature.getControl();
@@ -184,6 +219,6 @@ public final class XMLFeatureSet {
         private XMLFeature feature;
     }
 
-    private Map<String, XMLFeatureState> features = new TreeMap<String, XMLFeatureState>();
-    private Map<XMLFeature, String> states = new TreeMap<XMLFeature, String>();
+    private Map<String, XMLFeatureState> features;
+    private Map<XMLFeature, String> states;
 }

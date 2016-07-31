@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -29,8 +28,7 @@ import org.crosswire.jsword.internationalisation.LocaleProviderManager;
  * A utility class that converts ISO-3166 codes or locales to their "friendly"
  * country name.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class Countries {
@@ -46,7 +44,7 @@ public final class Countries {
      * locale is used for the iso3166Code, it will use the part after the '_'.
      * Thus, this code does not support dialects.
      * 
-     * @param iso3166Code
+     * @param iso3166Code the country code
      * @return true if the country is valid.
      */
     public static boolean isValidCountry(String iso3166Code) {
@@ -79,7 +77,7 @@ public final class Countries {
      * is used for the iso3166Code, it will use the part before the '_'. Thus,
      * this code does not support dialects, except as found in the iso3166.
      * 
-     * @param iso3166Code
+     * @param iso3166Code the country code
      * @return the name of the country
      */
     public static String getCountry(String iso3166Code) {

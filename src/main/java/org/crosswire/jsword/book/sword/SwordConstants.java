@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.sword;
@@ -23,12 +22,10 @@ package org.crosswire.jsword.book.sword;
 /**
  * A Constants to help the SwordBookDriver to read Sword format data.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Mark Goodwin [mark at thorubio dot org]
- * @author Joe Walker [joe at eireneh dot com]
- * @author The Sword project (don't know who - no credits in original files
- *         (canon.h))
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Mark Goodwin
+ * @author Joe Walker
+ * @author The SWORD Project (don't know who - no credits in original files (canon.h))
  */
 public final class SwordConstants {
     /**
@@ -76,4 +73,9 @@ public final class SwordConstants {
      * The configuration directory
      */
     public static final String DIR_CONF = "mods.d";
+
+    /**
+     * The configuration directory with a trailing /
+     */
+    public static final String PATH_CONF = "mods.d/";
 }

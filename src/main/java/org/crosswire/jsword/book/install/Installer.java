@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.install;
@@ -37,9 +36,8 @@ import java.util.List;
  * etc.
  * </p>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public interface Installer extends BookList {
@@ -70,14 +68,18 @@ public interface Installer extends BookList {
      * then we should just return an empty list and not attempt to contact the
      * remote source. See notes on reload for more information.
      * 
+     * @return the list of books
      * @see Installer#reloadBookList()
      */
     List<Book> getBooks();
 
     /**
      * Get a Book matching the name from the local cache. Null if none is found.
+     * 
+     * @param book the book name
+     * @return the instantiated book
      */
-    Book getBook(final String Book);
+    Book getBook(final String book);
 
     /**
      * Return true if the book is not installed or there is a newer version to
@@ -104,6 +106,8 @@ public interface Installer extends BookList {
      * if the user was warned about the implications of this action. If the user
      * lives in a country that persecutes Christians then this action might give
      * the game away.</b>
+     * 
+     * @throws InstallException 
      */
     void reloadBookList() throws InstallException;
 
@@ -115,6 +119,7 @@ public interface Installer extends BookList {
      *
      * @param book
      *            The book to install
+     * @throws InstallException 
      */
     void install(final Book book) throws InstallException;
 
@@ -127,6 +132,7 @@ public interface Installer extends BookList {
      * @param tempDest
      *            A temporary URI for downloading to. Passed to the BookIndexer
      *            for installation.
+     * @throws InstallException 
      */
     void downloadSearchIndex(final Book book, final URI tempDest) throws InstallException;
 

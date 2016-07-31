@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.jsword.bridge;
@@ -43,8 +42,7 @@ import org.xml.sax.SAXException;
 /**
  * The DWR DwrBridge adapts JSword to DWR. This is based upon APIExamples.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class DwrBridge {
@@ -84,7 +82,7 @@ public class DwrBridge {
      * @return true if searching can be performed
      */
     public boolean isIndexed(String bookInitials) {
-        return isIndexed(BookInstaller.getInstalledBook(bookInitials));
+        return isBookIndexed(BookInstaller.getInstalledBook(bookInitials));
     }
 
     /**
@@ -114,6 +112,11 @@ public class DwrBridge {
      *            the book to use
      * @param reference
      *            a reference, appropriate for the book, for one or more keys
+     * @param start 
+     * @param count 
+     * @return the OSIS as a string
+     * @throws BookException 
+     * @throws NoSuchKeyException 
      */
     public String getOSISString(String bookInitials, String reference, int start, int count) throws BookException, NoSuchKeyException {
         String result = "";
@@ -126,6 +129,7 @@ public class DwrBridge {
             }
             return result;
         } catch (SAXException ex) {
+            // This is allowed
             // throw new BookException(Msg.JSWORD_SAXPARSE, ex);
         }
         return result;
@@ -141,7 +145,7 @@ public class DwrBridge {
      */
     public String search(String bookInitials, String searchRequest) throws BookException {
         Book book = BookInstaller.getInstalledBook(bookInitials);
-        if (isIndexed(book) && searchRequest != null) {
+        if (isBookIndexed(book) && searchRequest != null) {
             if (BookCategory.BIBLE.equals(book.getBookCategory())) {
                 BookName.setFullBookName(false);
             }
@@ -154,6 +158,11 @@ public class DwrBridge {
      * Get close matches for a target in a book whose keys have a meaningful
      * sort. This is not true of keys that are numeric or contain numbers.
      * (unless the numbers are 0 filled.)
+     * 
+     * @param bookInitials 
+     * @param searchRequest 
+     * @param maxMatchCount 
+     * @return the matches
      */
     public String[] match(String bookInitials, String searchRequest, int maxMatchCount) {
         Book book = BookInstaller.getInstalledBook(bookInitials);
@@ -224,7 +233,7 @@ public class DwrBridge {
      *            the book to check.
      * @return true if searching can be performed
      */
-    private boolean isIndexed(Book book) {
+    public boolean isBookIndexed(Book book) {
         return book != null && IndexManagerFactory.getIndexManager().isIndexed(book);
     }
 

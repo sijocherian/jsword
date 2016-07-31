@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -30,13 +29,15 @@ import org.slf4j.LoggerFactory;
 /**
  * A Key that knows where the data is in the real file.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class TreeKey extends AbstractKeyList {
     /**
      * Setup with the key name and positions of data in the file
+     *
+     * @param name the key for this TreeKey 
+     * @param parent the parent node for this TreeKey
      */
     public TreeKey(String name, Key parent) {
         super(name);
@@ -46,7 +47,9 @@ public class TreeKey extends AbstractKeyList {
 
     /**
      * Setup with the key name. Use solely for searching.
-     */
+     *
+     * @param text the key for this TreeKey 
+      */
     public TreeKey(String text) {
         this(text, null);
     }
@@ -146,6 +149,35 @@ public class TreeKey extends AbstractKeyList {
         return parent;
     }
 
+    /** equality is tricky if comparing TreeKeys (as used by GenBooks) because some child keys can have the same name but different parents
+     */
+    @Override
+    public boolean equals(Object obj) {
+        // Since this can not be null
+        if (obj == null) {
+            return false;
+        }
+
+        // Check that that is the same as this
+        // Don't use instanceOf since that breaks inheritance
+        if (!obj.getClass().equals(this.getClass())) {
+            return false;
+        }
+
+        TreeKey otherTreeKey = (TreeKey) obj;
+        if (!getName().equals(otherTreeKey.getName())) {
+            return false;
+        }
+
+        // names match so now work up the tree comparing parents
+        if (getParent() == null) {
+            return otherTreeKey.getParent() == null;
+        }
+
+        // KeyTrees nodes can have the same name but different parents
+        return getParent().equals(otherTreeKey.getParent());
+    }
+
     /* (non-Javadoc)
      * @see org.crosswire.jsword.passage.Key#blur(int, org.crosswire.jsword.passage.RestrictionType)
      */
@@ -175,23 +207,13 @@ public class TreeKey extends AbstractKeyList {
     @Override
     public String getOsisID() {
         StringBuilder b = new StringBuilder(100);
-        b.append(osisify(getName()));
+        b.append(getName());
         for (Key parentKey = this.getParent(); parentKey != null && parentKey.getName().length() > 0; parentKey = parentKey.getParent()) {
-            b.insert(0, ".");
-            b.insert(0, osisify(parentKey.getName()));
+            b.insert(0, "/");
+            b.insert(0, parentKey.getName());
         }
         // Remove the leading .
         return b.toString();
-    }
-
-    private String osisify(String str) {
-        // FIXME(DMS): An osisID cannot have lots of stuff that a name can have.
-        // It can only have _, a-z, A-Z, 0-9.
-        // Need to normalize the name by
-        // replacing ' ' with '_'
-        // Stripping punctuation, accents, ...
-        // ...
-        return str.replace(' ', '_');
     }
 
     /**

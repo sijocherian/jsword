@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.index.lucene;
@@ -74,9 +73,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Implement the SearchEngine using Lucene as the search engine.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public class LuceneIndex extends AbstractIndex implements Closeable {
     /*
@@ -132,6 +130,8 @@ public class LuceneIndex extends AbstractIndex implements Closeable {
     /**
      * Read an existing index and use it.
      * 
+     * @param book the book
+     * @param storage 
      * @throws BookException
      *             If we fail to read the index files
      */
@@ -150,6 +150,9 @@ public class LuceneIndex extends AbstractIndex implements Closeable {
     /**
      * Generate an index to use, telling the job about progress as you go.
      * 
+     * @param book the book
+     * @param storage 
+     * @param policy 
      * @throws BookException
      *             If we fail to read the index files
      */
@@ -365,8 +368,9 @@ public class LuceneIndex extends AbstractIndex implements Closeable {
      */
     private void generateSearchIndexImpl(Progress job, List<Key> errors, IndexWriter writer, Key key, int count, IndexPolicy policy) throws BookException, IOException {
         String v11nName = null;
-        if(book.getBookMetaData().getProperty("Versification")!=null)
+        if (book.getBookMetaData().getProperty("Versification") != null) {
             v11nName = book.getBookMetaData().getProperty("Versification").toString();
+        }
         Versification v11n = Versifications.instance().getVersification(v11nName);
         boolean includeStrongs = book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS) && policy.isStrongsIndexed();
         boolean includeXrefs = book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES) && policy.isXrefIndexed();
@@ -407,7 +411,7 @@ public class LuceneIndex extends AbstractIndex implements Closeable {
             osis = null;
 
             try {
-                osis = data.getOsisFragment();
+                osis = data.getOsisFragment(false);
             } catch (BookException e) {
                 errors.add(subkey);
                 continue;
@@ -441,7 +445,8 @@ public class LuceneIndex extends AbstractIndex implements Closeable {
             }
 
             if (includeHeadings) {
-                addField(doc, headingField, OSISUtil.getHeadings(osis));
+                String heading = OSISUtil.getHeadings(osis);
+                addField(doc, headingField, heading);
             }
 
             if (includeMorphology) {
@@ -500,6 +505,7 @@ public class LuceneIndex extends AbstractIndex implements Closeable {
      * 
      * Note: by using this method, you need to ensure you don't close the searcher while it is being used.
      * See {@link org.crosswire.jsword.index.IndexManager#closeAllIndexes()} for more information
+     * @return the searcher
      */
     public Searcher getSearcher() {
         return searcher;

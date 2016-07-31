@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -54,14 +53,16 @@ import org.jdom2.Text;
  * That does not mean that each has to have content for each key. Missing keys
  * are represented by empty cells.
  *
- * @author Joe Walker [joe at eireneh dot com]
+ * @author Joe Walker
  * @author DM Smith
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  */
 public class BookData implements BookProvider {
     /**
-     * Ctor
+     * Create a BookData.
+     * 
+     * @param book the Book to which the data belongs
+     * @param key the Key specifying the data
      */
     public BookData(Book book, Key key) {
         assert book != null;
@@ -75,6 +76,10 @@ public class BookData implements BookProvider {
 
     /**
      * Create BookData for multiple books.
+     * 
+     * @param books the set of Books to which the data belongs
+     * @param key the Key specifying the data
+     * @param compare when true each pair of adjacent books is to be compared
      */
     public BookData(Book[] books, Key key, boolean compare) {
         assert books != null && books.length > 0;
@@ -87,6 +92,9 @@ public class BookData implements BookProvider {
 
     /**
      * Accessor for the root OSIS element
+     * 
+     * @return the root of the OSIS document representing this data
+     * @throws BookException if there is any problem with this request
      */
     public Element getOsis() throws BookException {
         if (osis == null) {
@@ -102,11 +110,29 @@ public class BookData implements BookProvider {
     }
 
     /**
-     * Accessor for the root OSIS element
+     * Accessor for the requested data in OSIS format.
+     * 
+     * @return the fragment of the OSIS document representing this data
+     * @throws BookException if there is any problem with this request
      */
     public Element getOsisFragment() throws BookException {
         if (fragment == null) {
-            fragment = getOsisContent();
+            fragment = getOsisContent(true);
+        }
+
+        return fragment;
+    }
+
+    /**
+     * Accessor for the root OSIS element
+     * 
+     * @param allowGenTitles whether to generate titles
+     * @return the root of the document
+     * @throws BookException if there is any problem with this request
+     */
+    public Element getOsisFragment(boolean allowGenTitles) throws BookException {
+        if (fragment == null) {
+            fragment = getOsisContent(allowGenTitles);
         }
 
         return fragment;
@@ -116,6 +142,7 @@ public class BookData implements BookProvider {
      * Output the current data as a SAX stream.
      *
      * @return A way of posting SAX events
+     * @throws BookException if there is any problem with this request
      */
     public SAXEventProvider getSAXEventProvider() throws BookException {
         // If the fragment is already in a document, then use that.
@@ -138,6 +165,8 @@ public class BookData implements BookProvider {
 
     /**
      * Get the first book.
+     * 
+     * @return the first or only book
      */
     public Book getFirstBook() {
         return books != null && books.length > 0 ? books[0] : null;
@@ -159,11 +188,11 @@ public class BookData implements BookProvider {
         return comparingBooks;
     }
 
-    private Element getOsisContent() throws BookException {
+    private Element getOsisContent(boolean allowGenTitles) throws BookException {
         Element div = OSISUtil.factory().createDiv();
 
         if (books.length == 1) {
-            Iterator<Content> iter = books[0].getOsisIterator(key, false);
+            Iterator<Content> iter = books[0].getOsisIterator(key, false, allowGenTitles);
             while (iter.hasNext()) {
                 Content content = iter.next();
                 div.addContent(content);
@@ -190,7 +219,7 @@ public class BookData implements BookProvider {
                 passages[i] = VersificationsMapper.instance().map(KeyUtil.getPassage(key), getVersification(i));
 
                 //iterator takes care of versification differences here...
-                iters[i] = books[i].getOsisIterator(passages[i], true);
+                iters[i] = books[i].getOsisIterator(passages[i], true, true);
 
                 if (i == 0) {
                     //we never omit a verse for the first passage, since we're going to output everything based on that.
@@ -225,7 +254,7 @@ public class BookData implements BookProvider {
                 for (int i = 0; i < books.length; i++) {
                     Book book = books[i];
                     cell = OSISUtil.factory().createCell();
-                    Language lang = (Language) book.getProperty(BookMetaData.KEY_XML_LANG);
+                    Language lang = book.getLanguage();
                     if (lang != null) {
                         cell.setAttribute(OSISUtil.OSIS_ATTR_LANG, lang.getCode(), Namespace.XML_NAMESPACE);
                     }
@@ -272,7 +301,7 @@ public class BookData implements BookProvider {
 
                                 // Since we used that cell create another
                                 cell = OSISUtil.factory().createCell();
-                                lang = (Language) book.getProperty(BookMetaData.KEY_XML_LANG);
+                                lang = book.getLanguage();
                                 cell.setAttribute(OSISUtil.OSIS_ATTR_LANG, lang.getCode(), Namespace.XML_NAMESPACE);
                                 row.addContent(cell);
                             }
@@ -309,8 +338,8 @@ public class BookData implements BookProvider {
      * As a result, we take the opportunity to add it safely, and add a note indicating
      * this content appears twice.
      *
-     * @param cell
-     * @param xmlContent
+     * @param cell the element to be added
+     * @param xmlContent the collector of content
      */
     private void addContentSafely(final Element cell, final List<Content> xmlContent) {
         Element note = null;
@@ -331,6 +360,7 @@ public class BookData implements BookProvider {
     /**
      * Creates a notice element.
      *
+     * @param parent the parent to which the notice is added
      * @param notice the notice fragment to be applied to the sub-type
      * @return the new element
      */
@@ -348,7 +378,7 @@ public class BookData implements BookProvider {
      */
     private Versification getVersification(final int i) {
         return Versifications.instance().getVersification(
-                (String) books[i].getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
+                books[i].getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
     }
 
 
@@ -356,7 +386,10 @@ public class BookData implements BookProvider {
      * We iterate through the content, making sure we key together those bits that belong together.
      * And separating out each verse.
      *
+     * @param v11n the versification for the content
      * @param iter the iterator of OSIS content
+     * @return the verse content for the book
+     * @throws BookException if there is any problem with this request
      */
     private BookVerseContent keyIteratorContentByVerse(Versification v11n, final Iterator<Content> iter) throws BookException {
         BookVerseContent contentsByOsisID = new BookVerseContent();

@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package gnu.lgpl;
@@ -25,8 +24,7 @@ import org.crosswire.common.util.MsgBase;
 /**
  * Compile safe Msg resource settings.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 final class LGPLMsg extends MsgBase {
@@ -34,8 +32,8 @@ final class LGPLMsg extends MsgBase {
      * Get the internationalized text, but return key if key is unknown.
      * The text requires one or more parameters to be passed.
      * 
-     * @param key
-     * @param params
+     * @param key the formatted key to internationalize
+     * @param params the parameters to format
      * @return the formatted, internationalized text
      */
     public static String lookupText(String key, Object... params) {

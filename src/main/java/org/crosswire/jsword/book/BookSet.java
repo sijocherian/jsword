@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -33,8 +32,7 @@ import org.crosswire.common.util.Filter;
  * BookSet represents a collection of descriptions about Books which may be
  * subsetted into other BookMetaDataSets. Each set is naturally ordered.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public class BookSet extends ArrayList<Book> implements Set<Book> {
@@ -55,7 +53,7 @@ public class BookSet extends ArrayList<Book> implements Set<Book> {
     public Set<String> getGroups() {
         Set<String> results = new TreeSet<String>();
         for (Book book : this) {
-            results.addAll(book.getProperties().keySet());
+            results.addAll(book.getPropertyKeys());
         }
         return results;
     }
@@ -67,7 +65,7 @@ public class BookSet extends ArrayList<Book> implements Set<Book> {
      * For example, "Language" will return all the languages for this
      * BookMetaDataList and null for which the language is unknown.
      * 
-     * @param key
+     * @param key the property key
      * @return the values for a particular key.
      */
     public Set<Object> getGroup(String key) {
@@ -83,6 +81,26 @@ public class BookSet extends ArrayList<Book> implements Set<Book> {
 
     public BookSet filter(String key, Object value) {
         return filter(new GroupFilter(key, value));
+    }
+
+    /**
+     * Get a set of books that satisfy the condition imposed by the filter.
+     * 
+     * @param filter the condition on which to select books
+     * @return the set of matching books
+     */
+    public BookSet filter(Filter<Book> filter) {
+        // create a copy of the list and
+        // remove everything that fails the test.
+        BookSet listSet = (BookSet) clone();
+        Iterator<Book> iter = listSet.iterator();
+        while (iter.hasNext()) {
+            Book obj = iter.next();
+            if (!filter.test(obj)) {
+                iter.remove();
+            }
+        }
+        return listSet;
     }
 
     /* (non-Javadoc)
@@ -148,36 +166,16 @@ public class BookSet extends ArrayList<Book> implements Set<Book> {
     }
 
     /**
-     * Get a set of books that satisfy the condition imposed by the filter.
-     * 
-     * @param filter the condition on which to select books
-     * @return the set of matching books
-     */
-    public BookSet filter(Filter<Book> filter) {
-        // create a copy of the list and
-        // remove everything that fails the test.
-        BookSet listSet = (BookSet) clone();
-        Iterator<Book> iter = listSet.iterator();
-        while (iter.hasNext()) {
-            Book obj = iter.next();
-            if (!filter.test(obj)) {
-                iter.remove();
-            }
-        }
-        return listSet;
-    }
-
-    /**
      * GroupFilter does the SQL traditional group by.
      */
     private static final class GroupFilter implements Filter<Book> {
-        public GroupFilter(String aKey, Object aValue) {
+        GroupFilter(String aKey, Object aValue) {
             key = aKey;
             value = aValue;
         }
 
         public boolean test(Book book) {
-            Object property = book.getProperty(key);
+            String property = book.getProperty(key);
             return property != null && property.equals(value);
         }
 

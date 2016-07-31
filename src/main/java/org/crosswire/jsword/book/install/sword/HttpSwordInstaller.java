@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.install.sword;
@@ -34,10 +33,9 @@ import org.crosswire.jsword.book.install.InstallException;
 /**
  * An implementation of Installer for reading data from Sword Web sites.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Mark Goodwin [goodwinster at gmail dot com]
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Mark Goodwin
+ * @author Joe Walker
  * @author DM Smith
  */
 public class HttpSwordInstaller extends AbstractSwordInstaller {
@@ -75,9 +73,9 @@ public class HttpSwordInstaller extends AbstractSwordInstaller {
         URI uri;
         try {
             uri = new URI(NetUtil.PROTOCOL_HTTP, host, dir + '/' + file, null);
-        } catch (URISyntaxException e1) {
+        } catch (URISyntaxException ex) {
             // TRANSLATOR: Common error condition: {0} is a placeholder for the URL of what could not be found.
-            throw new InstallException(JSMsg.gettext("Unable to find: {0}", dir + '/' + file), e1);
+            throw new InstallException(JSMsg.gettext("Unable to find: {0}", dir + '/' + file), ex);
         }
 
         try {

@@ -8,47 +8,45 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book.filter.osis;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
 import org.crosswire.common.xml.XMLUtil;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.DataPolice;
 import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.book.filter.Filter;
+import org.crosswire.jsword.book.filter.SourceFilter;
 import org.crosswire.jsword.passage.Key;
 import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 /**
  * Filter to convert an OSIS XML string to OSIS format.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
-public class OSISFilter implements Filter {
+public class OSISFilter implements SourceFilter {
 
     /* (non-Javadoc)
      * @see org.crosswire.jsword.book.filter.Filter#toOSIS(org.crosswire.jsword.book.Book, org.crosswire.jsword.passage.Key, java.lang.String)
@@ -58,10 +56,40 @@ public class OSISFilter implements Filter {
         Exception ex = null;
         String clean = plain;
 
+        // The following converts simple <div> and </div> to their milestoned versions.
+        // Current versions of osis2mod do this already
+        // Note: if the div element has attributes, it is not seen.
+        clean = DIV_START.matcher(clean).replaceAll("<div sID=\"xyz\"/>");
+        clean = DIV_END.matcher(clean).replaceAll("<div eID=\"xyz\"/>");
+        clean = CHAPTER_END.matcher(clean).replaceAll("<chapter eID=\"xyz\"/>");
+        clean = SPEECH_START.matcher(clean).replaceAll("<speech sID=\"xyz\"/>");
+        clean = SPEECH_END.matcher(clean).replaceAll("<speech eID=\"xyz\"/>");
+
         // FIXME(dms): this is a major HACK handling a problem with a badly
         // encoded module.
-        if (book.getInitials().startsWith("NET") && plain.endsWith("</div>")) {
+        /* if (book.getInitials().startsWith("NET") && plain.endsWith("</div>")) {
             clean = clean.substring(0, plain.length() - 6);
+            if (clean.matches(".*</div> <chapter eID=\"[A-Za-z0-9.]+\"/>")) {
+                clean = clean.substring(0, clean.lastIndexOf("</div> <chapter"));
+            }
+        } else if (book.getInitials().equals("Kekchi") && plain.endsWith("</div> <lb type=\"x-begin-paragraph\"/>")) {
+            clean = clean.substring(0, clean.length() - 37);
+        } else if (book.getInitials().equals("VietLCCMN")) {
+            int startPos = clean.indexOf("<div>"), endPos = clean.indexOf("</div>");
+            if (endPos != -1 && (startPos == -1 || startPos > endPos)) {
+                if (clean.startsWith("<l ") || (clean.startsWith("<title ") && clean.contains("</title><l ")))
+                    clean = "<lg>"+clean;
+                clean = "<div><div><div><div>"+clean;
+            }
+        } else */
+        if ("MapM".equals(book.getInitials())) {
+            for (String tag : Arrays.asList("cell", "row", "table")) {
+                int startPos = clean.indexOf("<" + tag + ">");
+                int endPos = clean.indexOf("</" + tag + ">");
+                if (endPos != -1 && (startPos == -1 || startPos > endPos)) {
+                    clean = "<" + tag + ">" + clean;
+                }
+            }
         }
 
         try {
@@ -73,19 +101,38 @@ public class OSISFilter implements Filter {
         }
 
         if (ele == null) {
-            clean = XMLUtil.cleanAllEntities(clean);
+            // There should be no bad entities in OSIS.
+            String cleanedEntities = XMLUtil.cleanAllEntities(clean);
+            if (cleanedEntities != null && !cleanedEntities.equals(clean)) {
+                clean = cleanedEntities;
+                try {
+                    ele = parse(clean);
+                    ex = null;
+                } catch (JDOMException e) {
+                    ex = e;
+                } catch (IOException e) {
+                    ex = e;
+                }
+            }
+        }
 
-            try {
-                ele = parse(clean);
-            } catch (JDOMException e) {
-                ex = e;
-            } catch (IOException e) {
-                ex = e;
+        if (ele == null) {
+            String reclosed = XMLUtil.recloseTags(clean);
+            if (reclosed != null && !reclosed.equals(clean)) {
+                clean = reclosed;
+                try {
+                    ele = parse(clean);
+                    ex = null;
+                } catch (JDOMException e) {
+                    ex = e;
+                } catch (IOException e) {
+                    ex = e;
+                }
             }
         }
 
         if (ex != null) {
-            DataPolice.report(book, key, "Parse " + book.getInitials() + "(" + key.getName() + ") failed: " + ex.getMessage() + "\non: " + plain);
+            DataPolice.report(book, key, "Parse failed: " + ex.getMessage() + "\non: " + clean);
             ele = cleanTags(book, key, clean);
         }
 
@@ -119,7 +166,7 @@ public class OSISFilter implements Filter {
             ex = e;
         }
 
-        log.warn("Could not fix {}({}) by cleaning tags: {}", book.getInitials(), key.getName(), ex.getMessage());
+        DataPolice.report(book, key, "Parse failed: " + ex.getMessage() + "\non: " + shawn);
 
         return null;
     }
@@ -142,7 +189,8 @@ public class OSISFilter implements Filter {
         StringReader in = null;
         Element div;
         try {
-            in = new StringReader("<div>" + plain + "</div>");
+            // Need to contain it in something that we remove when returning it to the user.
+            in = new StringReader("<xxx>" + plain + "</xxx>");
             InputSource is = new InputSource(in);
             Document doc = builder.build(is);
             div = doc.getRootElement();
@@ -158,11 +206,27 @@ public class OSISFilter implements Filter {
         return div;
     }
 
-    //space for 32 re-usable sax builders, but doesn't bound the number available to the callers
+    // space for 32 re-usable sax builders, but doesn't bound the number available to the callers
     private BlockingQueue<SAXBuilder> saxBuilders = new ArrayBlockingQueue<SAXBuilder>(32);
 
     /**
-     * The log stream
+     * Pattern to find the start of a div. Used to convert to a milestoned version.
      */
-    private static final Logger log = LoggerFactory.getLogger(OSISFilter.class);
+    private static final Pattern DIV_START = Pattern.compile("<div>", Pattern.LITERAL);
+    /**
+     * Pattern to find the end of a div. Used to convert to a milestoned version.
+     */
+    private static final Pattern DIV_END = Pattern.compile("</div>", Pattern.LITERAL);
+    /**
+     * Pattern to find the end of a chapter. Used to convert to a milestoned version.
+     */
+    private static final Pattern CHAPTER_END = Pattern.compile("</chapter>", Pattern.LITERAL);
+    /**
+     * Pattern to find the start of a speech. Used to convert to a milestoned version.
+     */
+    private static final Pattern SPEECH_START = Pattern.compile("<speech>", Pattern.LITERAL);
+    /**
+     * Pattern to find the end of a speech. Used to convert to a milestoned version.
+     */
+    private static final Pattern SPEECH_END = Pattern.compile("</speech>", Pattern.LITERAL);
 }

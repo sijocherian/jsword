@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -29,8 +28,6 @@ import java.util.NoSuchElementException;
 import org.crosswire.common.icu.NumberShaper;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A VerseRange is one step between a Verse and a Passage - it is a Verse plus a
@@ -40,9 +37,8 @@ import org.slf4j.LoggerFactory;
  * versions may not return any text for verses that they consider to be
  * miss-translated in some way.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  * @author DM Smith
  */
 public final class VerseRange implements VerseKey<VerseRange> {
@@ -51,7 +47,7 @@ public final class VerseRange implements VerseKey<VerseRange> {
      * provide this constructor however, you are supposed to provide a default
      * ctor for all beans. For this reason I suggest you don't use it.
      * 
-     *      * @param v11n
+     * @param v11n
      *            The versification for the range
      */
     public VerseRange(Versification v11n) {
@@ -111,7 +107,13 @@ public final class VerseRange implements VerseKey<VerseRange> {
             return this;
         }
         Verse newStart = start.reversify(newVersification);
+        if (newStart == null) {
+            return null;
+        }
         Verse newEnd = end.reversify(newVersification);
+        if (newEnd == null) {
+            return null;
+        }
         return new VerseRange(newVersification, newStart, newEnd);
     }
 
@@ -471,6 +473,19 @@ public final class VerseRange implements VerseKey<VerseRange> {
         return v11n.distance(start, that.getStart()) >= 0 && v11n.distance(that.getEnd(), end) >= 0;
     }
 
+    /* (non-Javadoc)
+     * @see org.crosswire.jsword.passage.Key#contains(org.crosswire.jsword.passage.Key)
+     */
+    public boolean contains(Key key) {
+        if (key instanceof VerseRange) {
+            return contains((VerseRange) key);
+        }
+        if (key instanceof Verse) {
+            return contains((Verse) key);
+        }
+        return false;
+    }
+
     /**
      * Does this range represent exactly one chapter, no more or less.
      * 
@@ -534,6 +549,7 @@ public final class VerseRange implements VerseKey<VerseRange> {
     /**
      * Enumerate the subranges in this range
      * 
+     * @param restrict 
      * @return a range iterator
      */
     public Iterator<VerseRange> rangeIterator(RestrictionType restrict) {
@@ -615,11 +631,11 @@ public final class VerseRange implements VerseKey<VerseRange> {
      */
     public static VerseRange intersection(VerseRange a, VerseRange b) {
         Versification v11n = a.getVersification();
-        Verse new_start = v11n.max(a.getStart(), b.getStart());
-        Verse new_end = v11n.min(a.getEnd(), b.getEnd());
+        Verse newStart = v11n.max(a.getStart(), b.getStart());
+        Verse newEnd = v11n.min(a.getEnd(), b.getEnd());
 
-        if (v11n.distance(new_start, new_end) <= 0) {
-            return new VerseRange(a.getVersification(), new_start, new_end);
+        if (v11n.distance(newStart, newEnd) >= 0) {
+            return new VerseRange(a.getVersification(), newStart, newEnd);
         }
 
         return null;
@@ -710,7 +726,7 @@ public final class VerseRange implements VerseKey<VerseRange> {
     /**
      * Calculate how many verses in this range
      * 
-     * @return The number of verses. Always >= 1.
+     * @return The number of verses. Always&gt;= 1.
      */
     private int calcVerseCount() {
         return v11n.distance(start, end) + 1;
@@ -836,19 +852,6 @@ public final class VerseRange implements VerseKey<VerseRange> {
         return verseCount == 0;
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Key#contains(org.crosswire.jsword.passage.Key)
-     */
-    public boolean contains(Key key) {
-        if (key instanceof VerseRange) {
-            return contains((VerseRange) key);
-        }
-        if (key instanceof Verse) {
-            return contains((Verse) key);
-        }
-        return false;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -953,12 +956,6 @@ public final class VerseRange implements VerseKey<VerseRange> {
      * The original string for picky users
      */
     private transient String originalName;
-
-    /**
-     * The log stream
-     */
-    /* pkg protected */static final transient Logger log = LoggerFactory.getLogger(VerseRange.class);
-
 
     /**
      * Serialization ID

@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.passage;
@@ -25,9 +24,8 @@ import org.crosswire.jsword.versification.Versification;
 /**
  * A factory to create a Verse from user input.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public final class VerseFactory {
     /**
@@ -42,6 +40,8 @@ public final class VerseFactory {
      * computer. The following initial letters can not be matched at all -
      * 'bfquvwx'.
      * 
+     * @param v11n
+     *            the versification to which this reference pertains
      * @param original
      *            The text string to be converted
      * @return the Verse representation of the string
@@ -62,6 +62,8 @@ public final class VerseFactory {
      * Construct a Verse from a String and a VerseRange. For example given "2:2"
      * and a basis of Gen 1:1 - 12 the result would be Gen 2:2
      * 
+     * @param v11n
+     *            the versification to which this reference pertains
      * @param original
      *            The string describing the verse e.g "2:2"
      * @param verseRangeBasis

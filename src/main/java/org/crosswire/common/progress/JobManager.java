@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.progress;
@@ -66,9 +65,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * worker.start();
  * </pre>
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public final class JobManager {
     /**
@@ -81,6 +79,7 @@ public final class JobManager {
      * Create a new Job that cannot be canceled.
      * 
      * @param jobName the name of the Job
+     * @return the job
      */
     public static Progress createJob(String jobName) {
         return createJob(UUID.randomUUID().toString(), jobName, null);
@@ -89,8 +88,10 @@ public final class JobManager {
     /**
      * Create a new Job that can be canceled.
      * 
+     * @param jobID a unique identifier for the job
      * @param jobName the name of the Job
      * @param workerThread the thread on which this job runs
+     * @return the job
      */
     public static Progress createJob(String jobID, String jobName, Thread workerThread) {
         Progress job = new Job(jobID, jobName, workerThread);
@@ -103,13 +104,17 @@ public final class JobManager {
 
     /**
      * Add a listener to the list
+     * 
+     * @param li the interested listener
      */
     public static void addWorkListener(WorkListener li) {
         listeners.add(li);
     }
 
     /**
-     * Remote a listener from the list
+     * Remove a listener from the list
+     * 
+     * @param li the disinterested listener
      */
     public static void removeWorkListener(WorkListener li) {
         listeners.remove(li);
@@ -117,6 +122,8 @@ public final class JobManager {
 
     /**
      * Accessor for the currently known jobs
+     * 
+     * @return an iterator over the jobs
      */
     public static Iterator<Progress> iterator() {
         return jobs.iterator();
@@ -131,6 +138,8 @@ public final class JobManager {
 
     /**
      * Inform the listeners that a title has changed.
+     * 
+     * @param job the job that has made progress
      */
     protected static void fireWorkProgressed(Progress job) {
         final WorkEvent ev = new WorkEvent(job);

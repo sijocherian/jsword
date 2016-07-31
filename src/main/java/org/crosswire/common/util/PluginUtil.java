@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2008-2013
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2008 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -37,8 +36,7 @@ import org.slf4j.LoggerFactory;
  * via a properties file whose suffix is "plugin". When there is more than one
  * implementation, one is marked as a default.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
  * @author DM Smith
  */
 public final class PluginUtil {
@@ -54,6 +52,7 @@ public final class PluginUtil {
      * class, and assuming that values are implementors of said class. Those
      * that are not are warned, but ignored.
      * 
+     * @param <T> the implementor's type
      * @param clazz
      *            The class or interface to find implementors of.
      * @return The list of implementing classes.
@@ -92,10 +91,11 @@ public final class PluginUtil {
      * of keys=strings, and values=classes in case you need to get at the names
      * given to the classes in the plugin file.
      * 
-     * @see PluginUtil#getImplementors(Class)
+     * @param <T> the implementor's type
      * @param clazz
      *            The class or interface to find implementors of.
      * @return The map of implementing classes.
+     * @see PluginUtil#getImplementors(Class)
      */
     public static <T> Map<String, Class<T>> getImplementorsMap(Class<T> clazz) {
         Map<String, Class<T>> matches = new HashMap<String, Class<T>>();
@@ -130,6 +130,7 @@ public final class PluginUtil {
      * class, and assuming that the "default" key is an implementation of said
      * class. Warnings are given otherwise.
      * 
+     * @param <T> the implementor's type
      * @param clazz
      *            The class or interface to find an implementation of.
      * @return The configured implementing class.
@@ -159,6 +160,7 @@ public final class PluginUtil {
      * Get and instantiate the preferred implementor of some interface or
      * abstract class.
      * 
+     * @param <T> the implementor's type
      * @param clazz
      *            The class or interface to find an implementation of.
      * @return The configured implementing class.
@@ -185,6 +187,7 @@ public final class PluginUtil {
     /**
      * Get and load a plugin file by looking it up as a resource.
      * 
+     * @param <T> the implementor's type
      * @param clazz
      *            The name of the desired resource
      * @return The found and loaded plugin file

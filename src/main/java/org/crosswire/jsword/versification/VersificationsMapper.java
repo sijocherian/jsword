@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2013 - 2014
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2013 - 2016
  *
  */
 package org.crosswire.jsword.versification;
@@ -49,6 +48,7 @@ import org.slf4j.LoggerFactory;
  * <li>to another verse in a different chapter. This is fairly common.</li>
  * <li>to two other verses. This is common in the Psalms and a few places elsewhere.</li>
  * </ul>
+ * <p>
  * The internal details of the mapping can be found in VersificationToKJVMapper.
  * </p>
  * <p>
@@ -57,9 +57,8 @@ import org.slf4j.LoggerFactory;
  * target Versifications. That it uses the KJV as an intermediary is an
  * implementation detail that may change. Do not rely on it.
  * </p>
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author chrisburrell
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Chris Burrell
  */
 public final class VersificationsMapper {
     /**
@@ -85,11 +84,10 @@ public final class VersificationsMapper {
         return instance;
     }
 
-
     /**
      * Maps a whole passage, and does so verse by verse. We can't do any better, since, we may for
      * example have:
-     * Ps.1.1-Ps.1.10 => Ps.1.2-Ps.1.11 so one would think we can simply map each of the start and end verses.
+     * Ps.1.1-Ps.1.10 =&gt; Ps.1.2-Ps.1.11 so one would think we can simply map each of the start and end verses.
      * However, this would be inaccurate since verse 9 might map to verse 12, 13, etc.
      *
      * @param key    the key if the source versification
@@ -114,6 +112,7 @@ public final class VersificationsMapper {
     /**
      * @param v                   the verse
      * @param targetVersification the final versification that we want
+     * @return the key for the verse
      */
     public VerseKey mapVerse(Verse v, Versification targetVersification) {
         if (v.getVersification().equals(targetVersification)) {
@@ -135,7 +134,11 @@ public final class VersificationsMapper {
             // and assume that it maps directly on to the KJV,
             // and thereby continue with the process
             kjvVerses = new ArrayList<QualifiedKey>();
-            kjvVerses.add(new QualifiedKey(v.reversify(KJV)));
+            final Verse reversifiedVerse = v.reversify(KJV);
+            //check that the key actually exists
+            if (reversifiedVerse != null) {
+                kjvVerses.add(new QualifiedKey(reversifiedVerse));
+            }
         } else {
             //we need qualified keys back, so as to preserve parts
             kjvVerses = mapper.map(new QualifiedKey(v));
@@ -161,7 +164,11 @@ public final class VersificationsMapper {
         // well.
         VerseKey finalKeys = new RangedPassage(targetVersification);
         for (QualifiedKey qualifiedKey : kjvVerses) {
-            finalKeys.addAll(targetMapper.unmap(qualifiedKey));
+            final VerseKey verseKey = targetMapper.unmap(qualifiedKey);
+            if (verseKey != null) {
+                //verse key exists in the target versification
+                finalKeys.addAll(verseKey);
+            }
         }
         return finalKeys;
     }
@@ -179,7 +186,11 @@ public final class VersificationsMapper {
         final VerseKey finalKeys = new RangedPassage(targetVersification);
         for (QualifiedKey qualifiedKey : kjvVerses) {
             if (qualifiedKey.getKey() != null) {
-                finalKeys.addAll(qualifiedKey.reversify(targetVersification).getKey());
+                final VerseKey key = qualifiedKey.reversify(targetVersification).getKey();
+                if (key != null) {
+                    //verse key exists in target versification
+                    finalKeys.addAll(key);
+                }
             }
         }
         return finalKeys;
@@ -235,10 +246,6 @@ public final class VersificationsMapper {
         } catch (MissingResourceException e) {
             // we've attempted to load it once, and that's all we'll do.
             LOGGER.error("Failed to load versification mappings for versification [{}]", versification, e);
-            MAPPERS.put(versification, null);
-        } catch (Exception e) {
-            // we've attempted to load it once, and that's all we'll do.
-            LOGGER.error("Failed for an unknown reason for versification [{}]", versification, e);
             MAPPERS.put(versification, null);
         }
     }

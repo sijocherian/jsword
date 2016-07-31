@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.jsword.book;
@@ -23,9 +22,8 @@ package org.crosswire.jsword.book;
 /**
  * The BibleDriver class allows creation of new Books.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public interface BookDriver extends BookProvider {
     /**
@@ -61,6 +59,8 @@ public interface BookDriver extends BookProvider {
      * reasons. For most implementations of Book etc, this method will throw up
      * because most will be read-only.
      * 
+     * @param dead
+     *            the book to be deleted
      * @throws BookException
      *             If the Book can't be deleted.
      */
@@ -68,6 +68,8 @@ public interface BookDriver extends BookProvider {
 
     /**
      * A short name for this BookDriver
+     * 
+     * @return a short name for this BookDriver
      */
     String getDriverName();
 }

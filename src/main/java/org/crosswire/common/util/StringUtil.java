@@ -8,14 +8,13 @@
  * See the GNU Lesser General Public License for more details.
  *
  * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
+ *      http://www.gnu.org/copyleft/lgpl.html
  * or by writing to:
  *      Free Software Foundation, Inc.
  *      59 Temple Place - Suite 330
  *      Boston, MA 02111-1307, USA
  *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
+ * © CrossWire Bible Society, 2005 - 2016
  *
  */
 package org.crosswire.common.util;
@@ -27,9 +26,8 @@ import java.io.Reader;
 /**
  * A generic class of String utilities.
  * 
- * @see gnu.lgpl.License for license details.<br>
- *      The copyright to this program is held by it's authors.
- * @author Joe Walker [joe at eireneh dot com]
+ * @see gnu.lgpl.License The GNU Lesser General Public License for details.
+ * @author Joe Walker
  */
 public final class StringUtil {
     /**
@@ -44,6 +42,20 @@ public final class StringUtil {
     public static final String NEWLINE = System.getProperty("line.separator", "\r\n");
 
     /**
+     * Compare two strings for equality such that both can be null.
+     * 
+     * @param string1 the first string
+     * @param string2 the second string
+     * @return true when both are null or both have the same string value
+     */
+    public static boolean equals(String string1, String string2) {
+        if (string1 == null) {
+            return string2 == null;
+        }
+        return string1.equals(string2);
+    }
+
+    /**
      * This method reads an InputStream <b>In its entirety</b>, and passes The
      * text back as a string. If you are reading from a source that can block
      * then be prepared for a long wait for this to return.
@@ -51,6 +63,7 @@ public final class StringUtil {
      * @param in
      *            The Stream to read from.
      * @return A string containing all the text from the Stream.
+     * @throws IOException when an I/O error occurred
      */
     public static String read(Reader in) throws IOException {
         StringBuilder retcode = new StringBuilder();
@@ -76,6 +89,9 @@ public final class StringUtil {
      * This function creates a readable title from a variable name type input.
      * For example calling: StringUtil.createTitle("one_two") = "One Two"
      * StringUtil.createTitle("oneTwo") = "One Two"
+     * 
+     * @param variable the name of a variable
+     * @return the generated title
      */
     public static String createTitle(String variable) {
         StringBuilder retcode = new StringBuilder();
@@ -141,10 +157,8 @@ public final class StringUtil {
     }
 
     /**
-     * <p>
      * Splits the provided text into an array, using whitespace as the
      * separator. Whitespace is defined by {@link Character#isWhitespace(char)}.
-     * </p>
      * 
      * <p>
      * The separator is not included in the returned String array. Adjacent
@@ -223,10 +237,8 @@ public final class StringUtil {
     }
 
     /**
-     * <p>
      * Splits the provided text into an array, using whitespace as the
      * separator. Whitespace is defined by {@link Character#isWhitespace(char)}.
-     * </p>
      * 
      * <p>
      * The separator is not included in the returned String array. Adjacent
@@ -243,6 +255,7 @@ public final class StringUtil {
      * 
      * @param str
      *            the String to parse, may be null
+     * @param max the maximum number of elements to return
      * @return an array of parsed Strings, <code>null</code> if null String
      *         input
      */
@@ -311,10 +324,8 @@ public final class StringUtil {
     }
 
     /**
-     * <p>
      * Splits the provided text into an array, separator specified. This is an
      * alternative to using StringTokenizer.
-     * </p>
      * 
      * <p>
      * The separator is not included in the returned String array. Adjacent
@@ -494,6 +505,155 @@ public final class StringUtil {
 
     /**
      * <p>
+     * Splits the provided text into an array, separators specified. This is an
+     * alternative to using StringTokenizer.
+     * </p>
+     * 
+     * <p>
+     * The separator is not included in the returned String array. Adjacent
+     * separators are treated as one separator.
+     * </p>
+     * 
+     * <p>
+     * A <code>null</code> input String returns <code>null</code>. A
+     * <code>null</code> separatorChars splits on whitespace.
+     * </p>
+     * 
+     * <pre>
+     * StringUtil.split(null, *)         = []
+     * StringUtil.split("", *)           = []
+     * StringUtil.split("abc def", null) = ["abc", "def"]
+     * StringUtil.split("abc def", " ")  = ["abc", "def"]
+     * StringUtil.split("abc  def", " ") = ["abc", "def"]
+     * StringUtil.split("ab:cd:ef", ":") = ["ab", "cd", "ef"]
+     * </pre>
+     * 
+     * @param str
+     *            the String to parse, may be null
+     * @param separatorChars
+     *            the characters used as the delimiters, <code>null</code>
+     *            splits on whitespace
+     * @return an array of parsed Strings, <code>null</code> if null String
+     *         input
+     */
+    public static String[] split(String str, String separatorChars) {
+        return split(str, separatorChars, -1);
+    }
+
+    /**
+     * <p>
+     * Splits the provided text into an array, separators specified. This is an
+     * alternative to using StringTokenizer.
+     * </p>
+     * 
+     * <p>
+     * The separator is not included in the returned String array. Adjacent
+     * separators are treated as one separator.
+     * </p>
+     * 
+     * <p>
+     * A <code>null</code> input String returns <code>null</code>. A
+     * <code>null</code> separatorChars splits on whitespace.
+     * </p>
+     * 
+     * <pre>
+     * StringUtil.split(null, *, *)            = []
+     * StringUtil.split("", *, *)              = []
+     * StringUtil.split("ab de fg", null, 0)   = ["ab", "cd", "ef"]
+     * StringUtil.split("ab   de fg", null, 0) = ["ab", "cd", "ef"]
+     * StringUtil.split("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
+     * StringUtil.split("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
+     * </pre>
+     * 
+     * @param str
+     *            the String to parse, may be null
+     * @param separatorStr
+     *            the characters used as the delimiters, <code>null</code>
+     *            splits on whitespace
+     * @param max
+     *            the maximum number of elements to include in the array. A zero
+     *            or negative value implies no limit
+     * @return an array of parsed Strings
+     */
+    public static String[] split(String str, String separatorStr, int max) {
+        // Performance tuned for 2.0 (JDK1.4)
+        // Direct code is quicker than StringTokenizer.
+        // Also, StringTokenizer uses isSpace() not isWhitespace()
+
+       if (separatorStr == null) {
+            return split(str, max);
+        }
+
+        if (separatorStr.length() == 1) {
+            return split(str, separatorStr.charAt(0), max);
+        }
+
+        if (str == null) {
+            return EMPTY_STRING_ARRAY.clone();
+        }
+
+        int len = str.length();
+        if (len == 0) {
+            return EMPTY_STRING_ARRAY.clone();
+        }
+
+        char[] cstr = str.toCharArray();
+        char[] separatorChars = separatorStr.toCharArray();
+
+        int count = 0;
+        int start = 0;
+        int i = 0;
+        while ((i = indexOfAny(cstr, separatorChars, start)) != -1) {
+            // Don't count separator at beginning,
+            // after another or at the end
+            if (i > start) {
+                ++count;
+            }
+            start = i + 1;
+        }
+
+        // If it didn't end with a separator then add in the last part
+        if (start < len) {
+            ++count;
+        }
+
+        // If there were no separators
+        // then we have one big part
+        if (count == 1) {
+            String[] list = new String[count];
+            list[0] = str;
+            return list;
+        }
+
+        // Limit the result
+        if (max > 0 && count > max) {
+            count = max;
+        }
+
+        // Create the array
+        String[] list = new String[count];
+
+        start = 0;
+        i = 0;
+        int x = 0;
+        while ((i = indexOfAny(cstr, separatorChars, start)) != -1) {
+            // Don't count separator at beginning,
+            // after another or at the end
+            if (i > start && x < count) {
+                list[x++] = str.substring(start, i);
+            }
+            start = i + 1;
+        }
+        // If it didn't end with a separator then add in the last part
+        if (start < len && x < count) {
+            list[x++] = str.substring(start);
+        }
+
+        return list;
+    }
+
+    /**
+     * <p>
      * Splits the provided text into an array, separator specified. This is an
      * alternative to using StringTokenizer.
      * </p>
@@ -643,155 +803,6 @@ public final class StringUtil {
                 list[x] = str.substring(start, len);
             }
             start = i + 1;
-        }
-
-        return list;
-    }
-
-    /**
-     * <p>
-     * Splits the provided text into an array, separators specified. This is an
-     * alternative to using StringTokenizer.
-     * </p>
-     * 
-     * <p>
-     * The separator is not included in the returned String array. Adjacent
-     * separators are treated as one separator.
-     * </p>
-     * 
-     * <p>
-     * A <code>null</code> input String returns <code>null</code>. A
-     * <code>null</code> separatorChars splits on whitespace.
-     * </p>
-     * 
-     * <pre>
-     * StringUtil.split(null, *)         = []
-     * StringUtil.split("", *)           = []
-     * StringUtil.split("abc def", null) = ["abc", "def"]
-     * StringUtil.split("abc def", " ")  = ["abc", "def"]
-     * StringUtil.split("abc  def", " ") = ["abc", "def"]
-     * StringUtil.split("ab:cd:ef", ":") = ["ab", "cd", "ef"]
-     * </pre>
-     * 
-     * @param str
-     *            the String to parse, may be null
-     * @param separatorChars
-     *            the characters used as the delimiters, <code>null</code>
-     *            splits on whitespace
-     * @return an array of parsed Strings, <code>null</code> if null String
-     *         input
-     */
-    public static String[] split(String str, String separatorChars) {
-        return split(str, separatorChars, -1);
-    }
-
-    /**
-     * <p>
-     * Splits the provided text into an array, separators specified. This is an
-     * alternative to using StringTokenizer.
-     * </p>
-     * 
-     * <p>
-     * The separator is not included in the returned String array. Adjacent
-     * separators are treated as one separator.
-     * </p>
-     * 
-     * <p>
-     * A <code>null</code> input String returns <code>null</code>. A
-     * <code>null</code> separatorChars splits on whitespace.
-     * </p>
-     * 
-     * <pre>
-     * StringUtil.split(null, *, *)            = []
-     * StringUtil.split("", *, *)              = []
-     * StringUtil.split("ab de fg", null, 0)   = ["ab", "cd", "ef"]
-     * StringUtil.split("ab   de fg", null, 0) = ["ab", "cd", "ef"]
-     * StringUtil.split("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
-     * StringUtil.split("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
-     * </pre>
-     * 
-     * @param str
-     *            the String to parse, may be null
-     * @param separatorStr
-     *            the characters used as the delimiters, <code>null</code>
-     *            splits on whitespace
-     * @param max
-     *            the maximum number of elements to include in the array. A zero
-     *            or negative value implies no limit
-     * @return an array of parsed Strings
-     */
-    public static String[] split(String str, String separatorStr, int max) {
-        // Performance tuned for 2.0 (JDK1.4)
-        // Direct code is quicker than StringTokenizer.
-        // Also, StringTokenizer uses isSpace() not isWhitespace()
-
-       if (separatorStr == null) {
-            return split(str, max);
-        }
-
-        if (separatorStr.length() == 1) {
-            return split(str, separatorStr.charAt(0), max);
-        }
-
-        if (str == null) {
-            return EMPTY_STRING_ARRAY.clone();
-        }
-
-        int len = str.length();
-        if (len == 0) {
-            return EMPTY_STRING_ARRAY.clone();
-        }
-
-        char[] cstr = str.toCharArray();
-        char[] separatorChars = separatorStr.toCharArray();
-
-        int count = 0;
-        int start = 0;
-        int i = 0;
-        while ((i = indexOfAny(cstr, separatorChars, start)) != -1) {
-            // Don't count separator at beginning,
-            // after another or at the end
-            if (i > start) {
-                ++count;
-            }
-            start = i + 1;
-        }
-
-        // If it didn't end with a separator then add in the last part
-        if (start < len) {
-            ++count;
-        }
-
-        // If there were no separators
-        // then we have one big part
-        if (count == 1) {
-            String[] list = new String[count];
-            list[0] = str;
-            return list;
-        }
-
-        // Limit the result
-        if (max > 0 && count > max) {
-            count = max;
-        }
-
-        // Create the array
-        String[] list = new String[count];
-
-        start = 0;
-        i = 0;
-        int x = 0;
-        while ((i = indexOfAny(cstr, separatorChars, start)) != -1) {
-            // Don't count separator at beginning,
-            // after another or at the end
-            if (i > start && x < count) {
-                list[x++] = str.substring(start, i);
-            }
-            start = i + 1;
-        }
-        // If it didn't end with a separator then add in the last part
-        if (start < len && x < count) {
-            list[x++] = str.substring(start);
         }
 
         return list;
